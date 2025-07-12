@@ -1,3 +1,4 @@
+import "@/common/utils/process";
 import cors from "cors";
 import express, { type Express } from "express";
 import helmet from "helmet";
