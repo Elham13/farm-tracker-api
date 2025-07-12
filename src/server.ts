@@ -4,7 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { allRoutes } from "@/api";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import connectDb from "@/common/config/db";
+import connectDb from "@/common/db";
 import { errorHandler, notFoundRouter } from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import { env } from "@/common/utils/envConfig";

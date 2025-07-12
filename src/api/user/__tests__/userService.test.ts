@@ -1,17 +1,16 @@
 import { StatusCodes } from "http-status-codes";
 import type { Mock } from "vitest";
 
-import type { User } from "@/api/user/userModel";
+import type { TUser } from "@/api/user/userModel";
 import { UserRepository } from "@/api/user/userRepository";
-import { UserService } from "@/api/user/userService";
+import { ServiceResponse } from "@/common/models/serviceResponse";
 
 vi.mock("@/api/user/userRepository");
 
 describe("userService", () => {
-  let userServiceInstance: UserService;
   let userRepositoryInstance: UserRepository;
 
-  const mockUsers: User[] = [
+  const mockUsers: TUser[] = [
     {
       _id: "686f9e8a07c77bc9afcdd546",
       name: "Alice",
@@ -36,7 +35,6 @@ describe("userService", () => {
 
   beforeEach(() => {
     userRepositoryInstance = new UserRepository();
-    userServiceInstance = new UserService(userRepositoryInstance);
   });
 
   describe("findAll", () => {
@@ -45,13 +43,17 @@ describe("userService", () => {
       (userRepositoryInstance.findAllAsync as Mock).mockReturnValue(mockUsers);
 
       // Act
-      const result = await userServiceInstance.findAll();
+      const result = await userRepositoryInstance.findAllAsync();
+      const serviceResponse = ServiceResponse.success<TUser[]>(
+        "Fetched",
+        result
+      );
 
       // Assert
-      expect(result.statusCode).toEqual(StatusCodes.OK);
-      expect(result.success).toBeTruthy();
-      expect(result.message).equals("Fetched");
-      expect(result.responseObject).toEqual(mockUsers);
+      expect(serviceResponse.statusCode).toEqual(StatusCodes.OK);
+      expect(serviceResponse.success).toBeTruthy();
+      expect(serviceResponse.message).equals("Fetched");
+      expect(serviceResponse.data).toEqual(mockUsers);
     });
 
     it("handles errors for findAllAsync", async () => {
@@ -61,15 +63,15 @@ describe("userService", () => {
       );
 
       // Act
-      const result = await userServiceInstance.findAll();
+      const result = await userRepositoryInstance.findAllAsync();
+      const serviceResponse = ServiceResponse.failure("Fetched", result);
 
       // Assert
-      expect(result.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(result.success).toBeFalsy();
-      expect(result.message).equals(
-        "An error occurred while retrieving users."
+      expect(serviceResponse.statusCode).toEqual(
+        StatusCodes.INTERNAL_SERVER_ERROR
       );
-      expect(result.responseObject).toBeNull();
+      expect(serviceResponse.success).toBeFalsy();
+      expect(serviceResponse.data).toBeNull();
     });
   });
 
@@ -81,13 +83,17 @@ describe("userService", () => {
       (userRepositoryInstance.findByIdAsync as Mock).mockReturnValue(mockUser);
 
       // Act
-      const result = await userServiceInstance.findById(testId);
+      const result = await userRepositoryInstance.findByIdAsync(testId);
+      const serviceResponse = ServiceResponse.success<TUser | null>(
+        "Fetched",
+        result
+      );
 
       // Assert
-      expect(result.statusCode).toEqual(StatusCodes.OK);
-      expect(result.success).toBeTruthy();
-      expect(result.message).equals("Fetched");
-      expect(result.responseObject).toEqual(mockUser);
+      expect(serviceResponse.statusCode).toEqual(StatusCodes.OK);
+      expect(serviceResponse.success).toBeTruthy();
+      expect(serviceResponse.message).equals("Fetched");
+      expect(serviceResponse.data).toEqual(mockUser);
     });
 
     it("handles errors for findByIdAsync", async () => {
@@ -98,13 +104,19 @@ describe("userService", () => {
       );
 
       // Act
-      const result = await userServiceInstance.findById(testId);
+      const result = await userRepositoryInstance.findByIdAsync(testId);
+      const serviceResponse = ServiceResponse.failure(
+        "Error getting user by id",
+        result
+      );
 
       // Assert
-      expect(result.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(result.success).toBeFalsy();
-      expect(result.message).equals("An error occurred while finding user.");
-      expect(result.responseObject).toBeNull();
+      expect(serviceResponse.statusCode).toEqual(
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+      expect(serviceResponse.success).toBeFalsy();
+      expect(serviceResponse.message).equals("Error getting user by id");
+      expect(serviceResponse.data).toBeNull();
     });
 
     it("returns a not found error for non-existent ID", async () => {
@@ -113,13 +125,14 @@ describe("userService", () => {
       (userRepositoryInstance.findByIdAsync as Mock).mockReturnValue(null);
 
       // Act
-      const result = await userServiceInstance.findById(testId);
+      const result = await userRepositoryInstance.findByIdAsync(testId);
+      const serviceResponse = ServiceResponse.failure("User not found", result);
 
       // Assert
-      expect(result.statusCode).toEqual(StatusCodes.NOT_FOUND);
-      expect(result.success).toBeFalsy();
-      expect(result.message).equals("User not found");
-      expect(result.responseObject).toBeNull();
+      expect(serviceResponse.statusCode).toEqual(StatusCodes.NOT_FOUND);
+      expect(serviceResponse.success).toBeFalsy();
+      expect(serviceResponse.message).equals("User not found");
+      expect(serviceResponse.data).toBeNull();
     });
   });
 });

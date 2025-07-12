@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.4",
+    "bcryptjs": "^3.0.2",
     "cors": "2.8.5",
     "dayjs": "^1.11.13",
     "dotenv": "17.2.0",

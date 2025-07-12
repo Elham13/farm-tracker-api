@@ -1,6 +1,6 @@
-import type { User } from "@/api/user/userModel";
+import type { TUser } from "@/api/user/userModel";
 
-export const users: User[] = [
+export const users: TUser[] = [
   {
     _id: "686f9e8a07c77bc9afcdd546",
     name: "Alice",
@@ -24,12 +24,12 @@ export const users: User[] = [
 ];
 
 export class UserRepository {
-  async findAllAsync(): Promise<User[]> {
+  async findAllAsync(): Promise<TUser[]> {
     return users;
   }
 
-  async createAsync(user: Omit<User, "_id">): Promise<User> {
-    const newUser: User = {
+  async createAsync(user: Omit<TUser, "_id">): Promise<TUser> {
+    const newUser: TUser = {
       ...user,
       _id: (Math.random() * 1000000).toString(),
       createdAt: new Date(),
@@ -39,7 +39,7 @@ export class UserRepository {
     return newUser;
   }
 
-  async findByIdAsync(id: string): Promise<User | null> {
+  async findByIdAsync(id: string): Promise<TUser | null> {
     return users.find((user) => user._id === id) || null;
   }
 }

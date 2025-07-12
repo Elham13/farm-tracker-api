@@ -1,9 +1,8 @@
 import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { userService } from "@/api/user/userService";
 import { ErrorHandler } from "@/common/middleware/errorHandler";
 import { ServiceResponse } from "@/common/models/serviceResponse";
-import type { User } from "./userModel";
+import type { TUser } from "./userModel";
 import { UserRepository } from "./userRepository";
 
 class UserController {
@@ -15,7 +14,7 @@ class UserController {
 
   public getUsers: RequestHandler = async (_req: Request, res: Response) => {
     const data = await this.userRepository.findAllAsync();
-    const serviceResponse = ServiceResponse.success<User[]>("Fetched", data);
+    const serviceResponse = ServiceResponse.success<TUser[]>("Fetched", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 
@@ -33,13 +32,7 @@ class UserController {
       );
     }
 
-    const serviceResponse = ServiceResponse.success<User>("Fetched", data);
-    res.status(serviceResponse.statusCode).send(serviceResponse);
-  };
-
-  public createUser: RequestHandler = async (req: Request, res: Response) => {
-    const id = req.params.id;
-    const serviceResponse = await userService.findById(id);
+    const serviceResponse = ServiceResponse.success<TUser>("Fetched", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 }

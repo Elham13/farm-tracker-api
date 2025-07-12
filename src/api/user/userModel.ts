@@ -40,7 +40,7 @@ export const UserSchema = z
     },
   });
 
-export type User = z.infer<typeof UserSchema>;
+export type TUser = z.infer<typeof UserSchema>;
 
 // Input Validation for 'GET users/:id' endpoint
 export const GetUserSchema = z.object({
