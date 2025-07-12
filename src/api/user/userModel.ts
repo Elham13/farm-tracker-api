@@ -8,7 +8,7 @@ extendZodWithOpenApi(z);
 
 export const UserSchema = z
   .object({
-    _id: z.string(),
+    _id: commonValidations.id,
     name: z.string(),
     phone: z
       .string()
@@ -47,13 +47,15 @@ export const GetUserSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
 
-export const CreateUserSchema = UserSchema.omit({
-  _id: true,
-  createdAt: true,
-  updatedAt: true,
-}).openapi({
-  description: "Schema for creating a new user",
-  title: "CreateUser",
+export const CreateUserSchema = z.object({
+  body: UserSchema.omit({
+    _id: true,
+    createdAt: true,
+    updatedAt: true,
+  }).openapi({
+    description: "Schema for creating a new user",
+    title: "CreateUser",
+  }),
 });
 
 export const UpdateUserSchema = UserSchema.partial()

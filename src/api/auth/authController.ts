@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ErrorHandler } from "@/common/middleware/errorHandler";
 import { ServiceResponse } from "@/common/models/serviceResponse";
+import type { TUser } from "../user/userModel";
 import type { LoginResponse } from "./authModel";
 import { AuthRepository } from "./authRepository";
 
@@ -12,18 +13,16 @@ class AuthController {
     this.authRepository = repository;
   }
 
-  public register = async (
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> => {
-    // Registration logic would go here
-    return next(
-      new ErrorHandler(
-        "Registration not implemented",
-        StatusCodes.NOT_IMPLEMENTED
-      )
+  public register = async (req: Request, res: Response): Promise<void> => {
+    const user = await this.authRepository.registerAsync(req.body);
+
+    const serviceResponse = ServiceResponse.success<Omit<TUser, "password">>(
+      "Registration successful",
+      user,
+      StatusCodes.CREATED
     );
+
+    res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 
   public login = async (

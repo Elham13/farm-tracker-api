@@ -12,7 +12,8 @@
     "dev": "node --import=tsx --watch src/index.ts",
     "start": "node dist/index.js",
     "test": "vitest run",
-    "test:cov": "vitest run --coverage"
+    "test:cov": "vitest run --coverage",
+    "clean": "rm -rf dist"
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "7.3.4",

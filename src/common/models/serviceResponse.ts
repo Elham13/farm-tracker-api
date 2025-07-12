@@ -18,11 +18,11 @@ export class ServiceResponse<T = null> {
     data: T,
     statusCode: number
   ) {
+    this.timestamp = dayjs().unix();
     this.success = success;
     this.message = message;
-    this.data = data;
     this.statusCode = statusCode;
-    this.timestamp = dayjs().unix();
+    this.data = data;
   }
 
   static success<T>(

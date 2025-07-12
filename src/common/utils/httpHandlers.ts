@@ -16,7 +16,10 @@ export const validateRequest =
       next();
     } catch (err) {
       const errors = (err as ZodError).issues.map((e) => {
-        const fieldPath = e.path.length > 0 ? e.path.join(".") : "root";
+        const fieldPath =
+          e.path.length > 0
+            ? e.path.filter((p) => p !== "body").join(".")
+            : "root";
         return `${fieldPath}: ${e.message}`;
       });
 
