@@ -2,7 +2,7 @@ import isProtected from "@/common/middleware/isProtected";
 import express, { Router } from "express";
 import { farmController } from "./farmController";
 import { validateRequest } from "@/common/utils/httpHandlers";
-import { AddFarmBodySchema, GetFarmByIdFarmSchema } from "./farmModel";
+import { AddFarmBodySchema, GetFarmByIdSchema } from "./farmModel";
 
 export const farmRouter: Router = express.Router();
 
@@ -18,6 +18,6 @@ farmRouter
 farmRouter.get(
   "/:id",
   isProtected,
-  validateRequest(GetFarmByIdFarmSchema),
+  validateRequest(GetFarmByIdSchema),
   farmController.getFarmById
 );

@@ -44,7 +44,7 @@ export const AddFarmBodySchema = z.object({
   }),
 });
 
-export const GetFarmByIdFarmSchema = z.object({
+export const GetFarmByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
 

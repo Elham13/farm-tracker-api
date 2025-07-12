@@ -1,5 +1,5 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { AddFarmSchema, FarmSchema } from "./farmModel";
+import { AddFarmSchema, FarmSchema, GetFarmByIdSchema } from "./farmModel";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import z from "zod";
 
@@ -12,6 +12,15 @@ farmRegistry.registerPath({
   path: "/farms",
   tags: ["Farm"],
   responses: createApiResponse(z.array(FarmSchema), "Success"),
+});
+farmRegistry.registerPath({
+  method: "get",
+  path: "/farms/{id}",
+  tags: ["Farm"],
+  request: {
+    params: GetFarmByIdSchema.shape.params,
+  },
+  responses: createApiResponse(FarmSchema, "Success"),
 });
 
 farmRegistry.registerPath({
