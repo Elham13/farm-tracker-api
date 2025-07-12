@@ -46,8 +46,8 @@ For a visual guide, watch the [video demo](https://github.com/user-attachments/a
 
 #### Step 1: 🚀 Initial Setup
 
-- Clone the repository: `git clone git@github.com:Elham13/express-ts-template.git`
-- Navigate: `cd express-ts-template`
+- Clone the repository: `git clone git@github.com:Elham13/farm-tracker-api.git`
+- Navigate: `cd farm-tracker-api`
 - Install dependencies: `pnpm install`
 
 #### Step 2: ⚙️ Environment Configuration

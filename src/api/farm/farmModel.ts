@@ -11,6 +11,7 @@ export const FarmSchema = z
     size: z.string(),
     address: z.string(),
     user: commonValidations.id,
+    geo: z.object({ lat: z.number(), long: z.number() }).optional(),
     createdAt: z.string().transform((date) => new Date(date)),
     updatedAt: z.string().transform((date) => new Date(date)),
   })

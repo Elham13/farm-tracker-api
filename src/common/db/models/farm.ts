@@ -24,7 +24,12 @@ const FarmSchema = new Schema<IFarmSchema>(
     },
     address: {
       type: String,
-      required: [true, "email is required"],
+    },
+    geo: {
+      type: {
+        lat: Number,
+        long: Number,
+      },
     },
     user: {
       type: Types.ObjectId,

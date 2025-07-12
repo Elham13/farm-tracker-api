@@ -1,9 +1,9 @@
 {
-  "name": "express-typescript-boilerplate",
+  "name": "farm-tracker-api",
   "version": "1.0.0",
-  "description": "An Express boilerplate backend",
+  "description": "An backend service to provide data for the Farm Tracker Mobile app and dashboard",
   "author": "Elhamuddin Mahmoodi",
-  "repository": "Elham13/express-ts-template",
+  "repository": "Elham13/farm-tracker-api",
   "license": "MIT",
   "main": "index.ts",
   "private": true,

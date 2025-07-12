@@ -7,6 +7,7 @@ import { healthCheckRegistry } from "@/api/healthCheck/healthCheckRouter";
 import { userRegistry } from "@/api/user/userRegistry";
 import { env } from "@/common/utils/envConfig";
 import { farmRegistry } from "@/api/farm/farmRegistry";
+import { cropRegistry } from "@/api/crop/cropRegistry";
 
 export type OpenAPIDocument = ReturnType<
   OpenApiGeneratorV3["generateDocument"]
@@ -18,6 +19,7 @@ export function generateOpenAPIDocument(): OpenAPIDocument {
     userRegistry,
     authRegistry,
     farmRegistry,
+    cropRegistry,
   ]);
   const generator = new OpenApiGeneratorV3(registry.definitions);
 
@@ -25,8 +27,9 @@ export function generateOpenAPIDocument(): OpenAPIDocument {
     openapi: "3.0.0",
     info: {
       version: "1.0.0",
-      title: "Template API",
-      description: "This is a template API for demonstration purposes.",
+      title: "Farm Tracker API",
+      description:
+        "This is a backend service to provide data for the Farm Tracker Mobile app and Dashboard.",
       contact: {
         name: "Elhamuddin Mahmoodi",
         email: "elhamuddin.mahmoodi@gmail.com",
