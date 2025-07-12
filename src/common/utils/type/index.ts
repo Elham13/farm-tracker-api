@@ -12,13 +12,3 @@ export interface UserInReq {
 export interface EnhancedRequest extends Request {
   user?: UserInReq;
 }
-
-export interface IFarm {
-  _id: string;
-  name: string;
-  size: string;
-  address: string;
-  user: string;
-  createdAt: Date;
-  updatedAt: Date;
-}

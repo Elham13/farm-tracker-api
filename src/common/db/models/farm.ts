@@ -1,3 +1,4 @@
+import { TFarm } from "@/api/farm/farmModel";
 import mongoose, {
   type Document,
   type Model,
@@ -5,9 +6,8 @@ import mongoose, {
   Schema,
   Types,
 } from "mongoose";
-import { IFarm } from "@/common/utils/type";
 
-interface IFarmSchema extends Document, Omit<IFarm, "_id" | "user"> {
+interface IFarmSchema extends Document, Omit<TFarm, "_id" | "user"> {
   _id: ObjectId;
   user: ObjectId;
 }
