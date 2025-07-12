@@ -3,6 +3,7 @@ import express, { type Router } from "express";
 import { z } from "zod";
 import { GetUserSchema, UserSchema } from "@/api/user/userModel";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
+import { asyncHandler } from "@/common/middleware/asyncHandler";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { userController } from "./userController";
 
@@ -18,7 +19,7 @@ userRegistry.registerPath({
   responses: createApiResponse(z.array(UserSchema), "Success"),
 });
 
-userRouter.get("/", userController.getUsers);
+userRouter.get("/", asyncHandler(userController.getUsers));
 
 userRegistry.registerPath({
   method: "get",

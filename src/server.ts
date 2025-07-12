@@ -1,10 +1,10 @@
 import cors from "cors";
 import express, { type Express } from "express";
 import helmet from "helmet";
-import { healthCheckRouter } from "@/api/healthCheck/healthCheckRouter";
-import { userRouter } from "@/api/user/userRouter";
+import morgan from "morgan";
+import { allRoutes } from "@/api";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
-import errorHandler from "@/common/middleware/errorHandler";
+import { errorHandler, notFoundRouter } from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import { env } from "@/common/utils/envConfig";
 
@@ -18,16 +18,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(helmet());
+app.use(morgan("dev"));
 app.use(rateLimiter);
 
 // Routes
-app.use("/health-check", healthCheckRouter);
-app.use("/users", userRouter);
+app.use("/api", allRoutes);
 
 // Swagger UI
 app.use(openAPIRouter);
 
+app.use(notFoundRouter);
+
 // Error handlers
-app.use(errorHandler());
+app.use(errorHandler);
 
 export { app };

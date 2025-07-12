@@ -28,6 +28,17 @@ export class UserRepository {
     return users;
   }
 
+  async createAsync(user: Omit<User, "_id">): Promise<User> {
+    const newUser: User = {
+      ...user,
+      _id: (Math.random() * 1000000).toString(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    users.push(newUser);
+    return newUser;
+  }
+
   async findByIdAsync(id: string): Promise<User | null> {
     return users.find((user) => user._id === id) || null;
   }

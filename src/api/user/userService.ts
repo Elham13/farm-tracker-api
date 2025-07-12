@@ -6,10 +6,28 @@ import { ServiceResponse } from "@/common/models/serviceResponse";
 import { logger } from "@/common/utils/logger";
 
 export class UserService {
-  private userRepository: UserRepository;
+  private readonly userRepository: UserRepository;
 
   constructor(repository: UserRepository = new UserRepository()) {
     this.userRepository = repository;
+  }
+
+  // Creates a new user in the database
+  async createUser(
+    user: Omit<User, "_id">
+  ): Promise<ServiceResponse<User | null>> {
+    try {
+      const createdUser = await this.userRepository.createAsync(user);
+      return ServiceResponse.success<User>("Created", createdUser);
+    } catch (ex) {
+      const errorMessage = `Error creating user: ${(ex as Error).message}`;
+      logger.error(errorMessage);
+      return ServiceResponse.failure(
+        "An error occurred while creating user.",
+        null,
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   // Retrieves all users from the database
