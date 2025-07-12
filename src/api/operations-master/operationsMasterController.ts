@@ -20,15 +20,8 @@ class OperationMasterController {
     res: Response,
     next: NextFunction
   ) => {
-    const userId = req.user?.userId;
-    if (!userId)
-      return next(new ErrorHandler("No user found!", StatusCodes.UNAUTHORIZED));
-
     const newData =
-      await this.operationsMasterRepository.addOperationsMasterAsync({
-        ...req.body,
-        user: userId,
-      });
+      await this.operationsMasterRepository.addOperationsMasterAsync(req.body);
     const serviceResponse = ServiceResponse.success<TOperationsMaster>(
       "Created",
       newData,
@@ -39,16 +32,10 @@ class OperationMasterController {
 
   public getOperationMasters: RequestHandler = async (
     req: EnhancedRequest,
-    res: Response,
-    next: NextFunction
+    res: Response
   ) => {
-    const userId = req.user?.userId;
-    if (!userId)
-      return next(new ErrorHandler("No user found!", StatusCodes.UNAUTHORIZED));
-
     const data =
       await this.operationsMasterRepository.getOperationsMastersAsync(
-        userId,
         req.query.cropId as string
       );
     const serviceResponse = ServiceResponse.success<TOperationsMaster[]>(
@@ -63,16 +50,11 @@ class OperationMasterController {
     res: Response,
     next: NextFunction
   ) => {
-    const userId = req.user?.userId;
-    if (!userId)
-      return next(new ErrorHandler("No user found!", StatusCodes.UNAUTHORIZED));
-
     const id = req.params.id;
     const cropId = req.query?.cropId as string;
 
     const data =
       await this.operationsMasterRepository.getOperationsMasterByIdAsync({
-        userId,
         id,
         cropId,
       });

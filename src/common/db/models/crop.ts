@@ -31,11 +31,6 @@ const CropSchema = new Schema<ICropSchema>(
     icon: {
       type: String,
     },
-    user: {
-      type: Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     farm: {
       type: Types.ObjectId,
       ref: "Farm",

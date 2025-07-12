@@ -5,6 +5,7 @@ import { userRouter } from "./user/userRouter";
 import { farmRouter } from "./farm/farmRouter";
 import { cropRouter } from "./crop/cropRouter";
 import { operationMasterRouter } from "./operations-master/operationsMasterRouter";
+import { operationsRouter } from "./operations/operationsRouter";
 
 export const allRoutes: Router = express.Router();
 
@@ -14,3 +15,4 @@ allRoutes.use("/auth", authRouter);
 allRoutes.use("/farms", farmRouter);
 allRoutes.use("/crops", cropRouter);
 allRoutes.use("/operations-master", operationMasterRouter);
+allRoutes.use("/operations", operationsRouter);

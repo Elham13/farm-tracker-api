@@ -15,7 +15,6 @@ export const CropSchema = z
       }),
     }),
     icon: z.string().optional(),
-    user: commonValidations.id,
     farm: commonValidations.id,
     createdAt: z.string().transform((date) => new Date(date)),
     updatedAt: z.string().transform((date) => new Date(date)),
@@ -29,7 +28,6 @@ export const CropSchema = z
       name: "Corn",
       type: "Current",
       icon: "https://example.com/1.png",
-      user: "686f9e8a07c77bc9afcdd543",
       farm: "686f9e8a07c77bc9afcdd542",
       createdAt: "2023-10-01T12:00:00Z",
       updatedAt: "2023-10-01T12:00:00Z",
@@ -43,12 +41,7 @@ export const AddCropSchema = CropSchema.omit({
 });
 
 export const AddCropBodySchema = z.object({
-  body: CropSchema.omit({
-    _id: true,
-    createdAt: true,
-    updatedAt: true,
-    user: true,
-  }),
+  body: AddCropSchema,
 });
 
 export const GetCropByIdSchema = z.object({
@@ -64,6 +57,5 @@ export type TCrop = z.infer<typeof CropSchema>;
 export type TAddCrop = z.infer<typeof AddCropSchema>;
 export type TGetCropByIdInput = {
   id: string;
-  userId: string;
   farmId: string;
 };

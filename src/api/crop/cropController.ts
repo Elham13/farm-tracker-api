@@ -36,15 +36,9 @@ class CropController {
 
   public getCrops: RequestHandler = async (
     req: EnhancedRequest,
-    res: Response,
-    next: NextFunction
+    res: Response
   ) => {
-    const userId = req.user?.userId;
-    if (!userId)
-      return next(new ErrorHandler("No user found!", StatusCodes.UNAUTHORIZED));
-
     const farms = await this.cropRepository.getCropsAsync(
-      userId,
       req.query.farmId as string
     );
     const serviceResponse = ServiceResponse.success<TCrop[]>("Fetched", farms);
@@ -56,15 +50,10 @@ class CropController {
     res: Response,
     next: NextFunction
   ) => {
-    const userId = req.user?.userId;
-    if (!userId)
-      return next(new ErrorHandler("No user found!", StatusCodes.UNAUTHORIZED));
-
     const id = req.params.id;
     const farmId = req.query?.farmId as string;
 
     const crop = await this.cropRepository.getCropByIdAsync({
-      userId,
       id,
       farmId,
     });

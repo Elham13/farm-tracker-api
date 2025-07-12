@@ -40,7 +40,7 @@ operationsMasterRegistry.registerPath({
     body: {
       content: {
         "application/json": {
-          schema: AddOperationsMasterSchema.omit({ user: true }),
+          schema: AddOperationsMasterSchema,
         },
       },
     },

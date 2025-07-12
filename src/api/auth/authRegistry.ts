@@ -12,7 +12,13 @@ import {
 
 export const authRegistry = new OpenAPIRegistry();
 
-authRegistry.register("Auth", UserSchema);
+authRegistry.register(
+  "Auth",
+  UserSchema.openapi({
+    title: "Auth",
+    description: "Auth model",
+  })
+);
 
 authRegistry.registerPath({
   method: "post",

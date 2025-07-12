@@ -39,7 +39,7 @@ cropRegistry.registerPath({
   request: {
     body: {
       content: {
-        "application/json": { schema: AddCropSchema.omit({ user: true }) },
+        "application/json": { schema: AddCropSchema },
       },
     },
   },

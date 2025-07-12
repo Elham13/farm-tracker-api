@@ -9,6 +9,7 @@ import { env } from "@/common/utils/envConfig";
 import { farmRegistry } from "@/api/farm/farmRegistry";
 import { cropRegistry } from "@/api/crop/cropRegistry";
 import { operationsMasterRegistry } from "@/api/operations-master/operationsMasterRegistry";
+import { operationsRegistry } from "@/api/operations/operationsRegistry";
 
 export type OpenAPIDocument = ReturnType<
   OpenApiGeneratorV3["generateDocument"]
@@ -22,6 +23,7 @@ export function generateOpenAPIDocument(): OpenAPIDocument {
     farmRegistry,
     cropRegistry,
     operationsMasterRegistry,
+    operationsRegistry,
   ]);
   const generator = new OpenApiGeneratorV3(registry.definitions);
 

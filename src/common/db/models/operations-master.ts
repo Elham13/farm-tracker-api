@@ -24,11 +24,6 @@ const OperationsMasterSchema = new Schema<IOperationsMaster>(
     icon: {
       type: String,
     },
-    user: {
-      type: Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
     crop: {
       type: Types.ObjectId,
       ref: "Crop",
@@ -39,7 +34,7 @@ const OperationsMasterSchema = new Schema<IOperationsMaster>(
 );
 
 const OperationsMaster: Model<IOperationsMaster> =
-  mongoose.models.OperationMaster ||
+  mongoose.models.OperationsMaster ||
   mongoose.model<IOperationsMaster>("OperationsMaster", OperationsMasterSchema);
 
 export default OperationsMaster;

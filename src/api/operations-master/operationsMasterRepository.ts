@@ -8,11 +8,9 @@ import OperationsMaster from "@/common/db/models/operations-master";
 
 export class OperationsMasterRepository {
   async getOperationsMastersAsync(
-    userId: string,
     corpId: string
   ): Promise<TOperationsMaster[]> {
     const operationsMaster: TOperationsMaster[] = await OperationsMaster.find({
-      user: userId,
       crop: corpId,
     });
     return operationsMaster;
@@ -21,11 +19,10 @@ export class OperationsMasterRepository {
   async getOperationsMasterByIdAsync(
     input: TGetOperationsMasterByIdInput
   ): Promise<TOperationsMaster | null> {
-    const { id, userId, cropId } = input;
+    const { id, cropId } = input;
     const operationMaster: HydratedDocument<TOperationsMaster> | null =
       await OperationsMaster.findOne({
         _id: id,
-        user: userId,
         crop: cropId,
       });
     if (!operationMaster) return null;
