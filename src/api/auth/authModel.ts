@@ -1,7 +1,7 @@
 import z from "zod";
 import { UserSchema } from "../user/userModel";
 
-export const LoginSchema = z.object({
+export const LoginRequestSchema = z.object({
   body: z.object({
     phone: z
       .string()
@@ -14,6 +14,19 @@ export const LoginSchema = z.object({
 export const LoginResponseSchema = UserSchema.extend({
   accessToken: z.string(),
   refreshToken: z.string(),
+}).omit({
+  password: true,
+});
+
+export const RegisterResponseSchema = UserSchema.omit({
+  password: true,
+});
+
+export const RegisterBodySchema = UserSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
 });
 
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
+export type TLoginInput = z.infer<typeof LoginRequestSchema.shape.body>;

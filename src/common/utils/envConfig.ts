@@ -21,7 +21,7 @@ const envSchema = z.object({
   JWT_REFRESH_SECRET: z
     .string()
     .min(1, "JWT_REFRESH_SECRET must be a non-empty string"),
-  JWT_EXPIRATION: z.string().default("1h"),
+  JWT_EXPIRY: z.string().default("1h"),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

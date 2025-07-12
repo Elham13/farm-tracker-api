@@ -1,4 +1,5 @@
 import type { TUser } from "@/api/user/userModel";
+import User from "@/common/db/models/user";
 
 export const users: TUser[] = [
   {
@@ -25,21 +26,10 @@ export const users: TUser[] = [
 
 export class UserRepository {
   async findAllAsync(): Promise<TUser[]> {
-    return users;
-  }
-
-  async createAsync(user: Omit<TUser, "_id">): Promise<TUser> {
-    const newUser: TUser = {
-      ...user,
-      _id: (Math.random() * 1000000).toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
-    users.push(newUser);
-    return newUser;
+    return await User.find({}).select("-password");
   }
 
   async findByIdAsync(id: string): Promise<TUser | null> {
-    return users.find((user) => user._id === id) || null;
+    return await User.findById(id).select("-password");
   }
 }

@@ -30,9 +30,7 @@ class AuthController {
     res: Response,
     next: NextFunction
   ): Promise<void> => {
-    const { phone, password } = req.body;
-
-    const user = await this.authRepository.loginAsync(phone, password);
+    const user = await this.authRepository.loginAsync(req.body);
     if (!user) {
       return next(
         new ErrorHandler("Invalid credentials", StatusCodes.UNAUTHORIZED)
