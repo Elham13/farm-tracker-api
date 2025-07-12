@@ -3,7 +3,7 @@ import { asyncHandler } from "@/common/middleware/asyncHandler";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { CreateUserSchema } from "../user/userModel";
 import { authController } from "./authController";
-import { LoginRequestSchema } from "./authModel";
+import { LoginRequestSchema, RefreshRequestSchema } from "./authModel";
 
 export const authRouter: Router = express.Router();
 
@@ -18,5 +18,12 @@ authRouter
   .route("/login")
   .post(
     validateRequest(LoginRequestSchema),
+    asyncHandler(authController.login)
+  );
+
+authRouter
+  .route("/refresh-token")
+  .post(
+    validateRequest(RefreshRequestSchema),
     asyncHandler(authController.login)
   );

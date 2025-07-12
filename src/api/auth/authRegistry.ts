@@ -4,6 +4,8 @@ import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import {
   LoginRequestSchema,
   LoginResponseSchema,
+  RefreshRequestSchema,
+  RefreshResponseSchema,
   RegisterBodySchema,
   RegisterResponseSchema,
 } from "./authModel";
@@ -38,4 +40,18 @@ authRegistry.registerPath({
     },
   },
   responses: createApiResponse(RegisterResponseSchema, "Success"),
+});
+
+authRegistry.registerPath({
+  method: "post",
+  path: "/refresh-token",
+  tags: ["Auth"],
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: RefreshRequestSchema.shape.body },
+      },
+    },
+  },
+  responses: createApiResponse(RefreshResponseSchema, "Success"),
 });

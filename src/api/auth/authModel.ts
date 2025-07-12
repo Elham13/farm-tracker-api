@@ -28,5 +28,17 @@ export const RegisterBodySchema = UserSchema.omit({
   updatedAt: true,
 });
 
+export const RefreshRequestSchema = z.object({
+  body: z.object({
+    refreshToken: z.string(),
+  }),
+});
+
+export const RefreshResponseSchema = z.object({
+  newAccessToken: z.string(),
+  newRefreshToken: z.string(),
+});
+
 export type LoginResponse = z.infer<typeof LoginResponseSchema>;
 export type TLoginInput = z.infer<typeof LoginRequestSchema.shape.body>;
+export type TRefreshTokenResponse = z.infer<typeof RefreshResponseSchema>;

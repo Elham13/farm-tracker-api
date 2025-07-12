@@ -1,13 +1,19 @@
 import bcrypt from "bcryptjs";
 import { StatusCodes } from "http-status-codes";
+import jwt from "jsonwebtoken";
 import type { HydratedDocument } from "mongoose";
 import type z from "zod";
 import User from "@/common/db/models/user";
 import { ErrorHandler } from "@/common/middleware/errorHandler";
 import type { Role } from "@/common/utils/constants/enums";
+import { env } from "@/common/utils/envConfig";
 import { generateAccessToken, generateRefreshToken } from "@/common/utils/jwt";
 import type { CreateUserSchema, TUser } from "../user/userModel";
-import type { LoginResponse, TLoginInput } from "./authModel";
+import type {
+  LoginResponse,
+  TLoginInput,
+  TRefreshTokenResponse,
+} from "./authModel";
 
 export class AuthRepository {
   async registerAsync(
@@ -53,5 +59,27 @@ export class AuthRepository {
     };
 
     return res;
+  }
+
+  async refreshTokenAsync(
+    token: string
+  ): Promise<TRefreshTokenResponse | null> {
+    const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET) as {
+      userId: string;
+    };
+
+    const user: HydratedDocument<TUser> | null = await User.findById(
+      decoded.userId
+    );
+    if (!user) return null;
+
+    const newAccessToken = await generateAccessToken({
+      userId: user._id,
+      phone: user.phone,
+      role: user.role as unknown as typeof Role,
+    });
+    const newRefreshToken = await generateRefreshToken({ userId: user._id });
+
+    return { newAccessToken, newRefreshToken };
   }
 }

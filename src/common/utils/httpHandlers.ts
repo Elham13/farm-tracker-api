@@ -18,7 +18,11 @@ export const validateRequest =
       const errors = (err as ZodError).issues.map((e) => {
         const fieldPath =
           e.path.length > 0
-            ? e.path.filter((p) => p !== "body").join(".")
+            ? e.path
+                .filter(
+                  (p) => !["body", "query", "params"].includes(p as string)
+                )
+                .join(".")
             : "root";
         return `${fieldPath}: ${e.message}`;
       });
