@@ -4,6 +4,7 @@ import { healthCheckRouter } from "./healthCheck/healthCheckRouter";
 import { userRouter } from "./user/userRouter";
 import { farmRouter } from "./farm/farmRouter";
 import { cropRouter } from "./crop/cropRouter";
+import { operationMasterRouter } from "./operations-master/operationsMasterRouter";
 
 export const allRoutes: Router = express.Router();
 
@@ -12,3 +13,4 @@ allRoutes.use("/users", userRouter);
 allRoutes.use("/auth", authRouter);
 allRoutes.use("/farms", farmRouter);
 allRoutes.use("/crops", cropRouter);
+allRoutes.use("/operations-master", operationMasterRouter);
