@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import type { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { env } from "@/common/utils/envConfig";
 
 export class ErrorHandler extends Error {
   statusCode = 0;
@@ -63,6 +64,6 @@ export const errorHandler = (
     success: false,
     message: err.message,
     statusCode: err.statusCode,
-    stack: process.env.NODE_ENV === "production" ? null : err.stack,
+    stack: env.isProduction ? null : err.stack,
   });
 };

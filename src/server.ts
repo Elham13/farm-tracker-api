@@ -4,11 +4,15 @@ import helmet from "helmet";
 import morgan from "morgan";
 import { allRoutes } from "@/api";
 import { openAPIRouter } from "@/api-docs/openAPIRouter";
+import connectDb from "@/common/config/db";
 import { errorHandler, notFoundRouter } from "@/common/middleware/errorHandler";
 import rateLimiter from "@/common/middleware/rateLimiter";
 import { env } from "@/common/utils/envConfig";
 
 const app: Express = express();
+
+// Connect to the database
+connectDb();
 
 // Set the application to trust the reverse proxy
 app.set("trust proxy", true);

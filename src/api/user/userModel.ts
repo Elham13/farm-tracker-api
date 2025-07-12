@@ -16,7 +16,11 @@ export const UserSchema = z
       .regex(/^\d+$/, "Phone must be numeric"),
     email: z.string().email(),
     password: z.string().min(6, "Password must be at least 6 characters"),
-    role: z.enum(Role),
+    role: z.nativeEnum(Role, {
+      errorMap: () => ({
+        message: `Role must be either ${Role.ADMIN} or ${Role.FARMER}`,
+      }),
+    }),
     createdAt: z.string().transform((date) => new Date(date)),
     updatedAt: z.string().transform((date) => new Date(date)),
   })
@@ -42,3 +46,22 @@ export type User = z.infer<typeof UserSchema>;
 export const GetUserSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
+
+export const CreateUserSchema = UserSchema.omit({
+  _id: true,
+  createdAt: true,
+  updatedAt: true,
+}).openapi({
+  description: "Schema for creating a new user",
+  title: "CreateUser",
+});
+
+export const UpdateUserSchema = UserSchema.partial()
+  .omit({
+    createdAt: true,
+    updatedAt: true,
+  })
+  .openapi({
+    description: "Schema for updating an existing user",
+    title: "UpdateUser",
+  });

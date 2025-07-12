@@ -1,5 +1,7 @@
-import type { Request, RequestHandler, Response } from "express";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 import { userService } from "@/api/user/userService";
+import { ErrorHandler } from "@/common/middleware/errorHandler";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import type { User } from "./userModel";
 import { UserRepository } from "./userRepository";
@@ -17,9 +19,21 @@ class UserController {
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 
-  public getUser: RequestHandler = async (req: Request, res: Response) => {
+  public getUser: RequestHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
     const id = req.params.id;
-    const serviceResponse = await userService.findById(id);
+    const data = await this.userRepository.findByIdAsync(id);
+
+    if (!data) {
+      return next(
+        new ErrorHandler(`User with ID ${id} not found`, StatusCodes.NOT_FOUND)
+      );
+    }
+
+    const serviceResponse = ServiceResponse.success<User>("Fetched", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 
