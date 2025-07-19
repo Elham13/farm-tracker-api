@@ -11,5 +11,12 @@
   "[github-actions-workflow][markdown][xml][yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "cSpell.words": ["asteasolutions", "Elham", "Elhamuddin", "Mahmoodi"]
+  "cSpell.words": [
+    "asteasolutions",
+    "Elham",
+    "Elhamuddin",
+    "IEFM",
+    "Mahmoodi",
+    "TEFM"
+  ]
 }

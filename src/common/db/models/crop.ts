@@ -1,5 +1,3 @@
-import { TCrop } from "@/api/crop/cropModel";
-import { CropType } from "@/common/utils/constants/enums";
 import mongoose, {
   type Document,
   type Model,
@@ -7,6 +5,8 @@ import mongoose, {
   Schema,
   Types,
 } from "mongoose";
+import type { TCrop } from "@/api/crop/cropModel";
+import { CropType } from "@/common/utils/constants/enums";
 
 interface ICropSchema extends Document, Omit<TCrop, "_id" | "user" | "farm"> {
   _id: ObjectId;
