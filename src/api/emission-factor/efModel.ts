@@ -45,6 +45,14 @@ export const AddEFBodySchema = z.object({
   body: AddEFSchema,
 });
 
+export const UpdateEFSchema = EFSchema.pick({ _id: true }).merge(
+  EFSchema.omit({ _id: true, createdAt: true, updatedAt: true }).partial()
+);
+
+export const UpdateEFBodySchema = z.object({
+  body: UpdateEFSchema,
+});
+
 export const GetEFByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
@@ -54,3 +62,4 @@ export type TAddEF = z.infer<typeof AddEFSchema>;
 export type TGetEFByIdInput = {
   id: string;
 };
+export type TUpdateEFInput = z.infer<typeof UpdateEFSchema>;

@@ -49,9 +49,45 @@ class EFMController {
     });
 
     if (!data)
-      return next(new ErrorHandler(`No Operation found with the id ${id}`));
+      return next(
+        new ErrorHandler(`No Emission Factor Master found with the id ${id}`)
+      );
 
     const serviceResponse = ServiceResponse.success<TEFM>("Fetched", data);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public deleteEFM: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const id = req.params.id;
+
+    const data = await this.efmRepository.deleteEFMAsync(id);
+
+    if (!data)
+      return next(
+        new ErrorHandler(`No Emission Factor Master found with the id ${id}`)
+      );
+
+    const serviceResponse = ServiceResponse.success<TEFM>("Deleted", data);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public updateEF: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data = await this.efmRepository.updateEFMAsync(req.body);
+
+    if (!data)
+      return next(
+        new ErrorHandler(`No Emission Factor found with the id ${req.body._id}`)
+      );
+
+    const serviceResponse = ServiceResponse.success<TEFM>("Updated", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 }

@@ -44,6 +44,14 @@ export const AddEFMBodySchema = z.object({
   body: AddEFMSchema,
 });
 
+export const UpdateEFMSchema = EFMSchema.pick({ _id: true }).merge(
+  EFMSchema.omit({ _id: true, createdAt: true, updatedAt: true }).partial()
+);
+
+export const UpdateEFMBodySchema = z.object({
+  body: UpdateEFMSchema,
+});
+
 export const GetEFMByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
@@ -53,3 +61,4 @@ export type TAddEFM = z.infer<typeof AddEFMSchema>;
 export type TGetEFMByIdInput = {
   id: string;
 };
+export type TUpdateEFMInput = z.infer<typeof UpdateEFMSchema>;

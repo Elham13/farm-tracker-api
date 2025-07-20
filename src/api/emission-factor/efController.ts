@@ -49,9 +49,45 @@ class EFController {
     });
 
     if (!data)
-      return next(new ErrorHandler(`No Operation found with the id ${id}`));
+      return next(
+        new ErrorHandler(`No Emission Factor found with the id ${id}`)
+      );
 
     const serviceResponse = ServiceResponse.success<TEF>("Fetched", data);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public deleteEF: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const id = req.params.id;
+
+    const data = await this.efRepository.deleteEFAsync(id);
+
+    if (!data)
+      return next(
+        new ErrorHandler(`No Emission Factor found with the id ${id}`)
+      );
+
+    const serviceResponse = ServiceResponse.success<TEF>("Deleted", data);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public updateEF: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data = await this.efRepository.updateEFAsync(req.body);
+
+    if (!data)
+      return next(
+        new ErrorHandler(`No Emission Factor found with the id ${req.body._id}`)
+      );
+
+    const serviceResponse = ServiceResponse.success<TEF>("Updated", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 }

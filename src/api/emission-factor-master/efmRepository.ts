@@ -1,6 +1,11 @@
 import type { HydratedDocument } from "mongoose";
 import EmissionFactorMaster from "@/common/db/models/emission-factor-master";
-import type { TAddEFM, TEFM, TGetEFMByIdInput } from "./efmModel";
+import type {
+  TAddEFM,
+  TEFM,
+  TGetEFMByIdInput,
+  TUpdateEFMInput,
+} from "./efmModel";
 
 export class EFMRepository {
   async getEFMAsync(): Promise<TEFM[]> {
@@ -21,5 +26,15 @@ export class EFMRepository {
   async addEFMAsync(input: TAddEFM): Promise<TEFM> {
     const operation = await EmissionFactorMaster.create(input);
     return operation.toJSON() as unknown as TEFM;
+  }
+
+  async deleteEFMAsync(id: string): Promise<TEFM | null> {
+    return await EmissionFactorMaster.findByIdAndDelete(id);
+  }
+
+  async updateEFMAsync(input: TUpdateEFMInput): Promise<TEFM | null> {
+    return await EmissionFactorMaster.findByIdAndUpdate(input._id, input, {
+      new: true,
+    });
   }
 }
