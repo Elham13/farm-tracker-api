@@ -84,7 +84,9 @@ class EFMController {
 
     if (!data)
       return next(
-        new ErrorHandler(`No Emission Factor found with the id ${req.body._id}`)
+        new ErrorHandler(
+          `No Emission Factor Master found with the id ${req.body._id}`
+        )
       );
 
     const serviceResponse = ServiceResponse.success<TEFM>("Updated", data);

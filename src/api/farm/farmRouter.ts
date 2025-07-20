@@ -1,23 +1,34 @@
+import express, { type Router } from "express";
 import isProtected from "@/common/middleware/isProtected";
-import express, { Router } from "express";
-import { farmController } from "./farmController";
 import { validateRequest } from "@/common/utils/httpHandlers";
-import { AddFarmBodySchema, GetFarmByIdSchema } from "./farmModel";
+import { farmController } from "./farmController";
+import {
+  AddFarmBodySchema,
+  GetFarmByIdSchema,
+  UpdateFarmBodySchema,
+} from "./farmModel";
 
 export const farmRouter: Router = express.Router();
 
 farmRouter
   .route("/")
   .get(isProtected, farmController.getFarms)
-  .post(
+  .post(isProtected, validateRequest(AddFarmBodySchema), farmController.addFarm)
+  .put(
     isProtected,
-    validateRequest(AddFarmBodySchema),
-    farmController.addFarm
+    validateRequest(UpdateFarmBodySchema),
+    farmController.updateFarm
   );
 
-farmRouter.get(
-  "/:id",
-  isProtected,
-  validateRequest(GetFarmByIdSchema),
-  farmController.getFarmById
-);
+farmRouter
+  .route("/:id")
+  .get(
+    isProtected,
+    validateRequest(GetFarmByIdSchema),
+    farmController.getFarmById
+  )
+  .delete(
+    isProtected,
+    validateRequest(GetFarmByIdSchema),
+    farmController.deleteFarm
+  );

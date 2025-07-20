@@ -1,6 +1,6 @@
+import type { HydratedDocument } from "mongoose";
 import Farm from "@/common/db/models/farm";
-import { TAddFarm, TFarm } from "./farmModel";
-import { HydratedDocument } from "mongoose";
+import type { TAddFarm, TFarm, TUpdateFarmInput } from "./farmModel";
 
 export class FarmRepository {
   async getFarmsAsync(userId: string): Promise<TFarm[]> {
@@ -20,5 +20,15 @@ export class FarmRepository {
   async addFarmsAsync(input: TAddFarm): Promise<TFarm> {
     const farm = await Farm.create(input);
     return farm.toJSON() as unknown as TFarm;
+  }
+
+  async deleteFarmAsync(id: string): Promise<TFarm | null> {
+    return await Farm.findByIdAndDelete(id);
+  }
+
+  async updateFarmAsync(input: TUpdateFarmInput): Promise<TFarm | null> {
+    return await Farm.findByIdAndUpdate(input._id, input, {
+      new: true,
+    });
   }
 }

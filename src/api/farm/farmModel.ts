@@ -1,6 +1,6 @@
-import { commonValidations } from "@/common/utils/commonValidation";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import z from "zod";
+import { commonValidations } from "@/common/utils/commonValidation";
 
 extendZodWithOpenApi(z);
 
@@ -49,5 +49,14 @@ export const GetFarmByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
 
+export const UpdateFarmSchema = FarmSchema.pick({ _id: true }).merge(
+  FarmSchema.omit({ _id: true, createdAt: true, updatedAt: true }).partial()
+);
+
+export const UpdateFarmBodySchema = z.object({
+  body: UpdateFarmSchema,
+});
+
 export type TFarm = z.infer<typeof FarmSchema>;
 export type TAddFarm = z.infer<typeof AddFarmSchema>;
+export type TUpdateFarmInput = z.infer<typeof UpdateFarmSchema>;

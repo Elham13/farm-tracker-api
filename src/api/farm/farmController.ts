@@ -1,10 +1,10 @@
-import { NextFunction, RequestHandler, Response } from "express";
-import { FarmRepository } from "./farmRepository";
-import { ServiceResponse } from "@/common/models/serviceResponse";
-import { EnhancedRequest } from "@/common/utils/type";
-import { ErrorHandler } from "@/common/middleware/errorHandler";
+import type { NextFunction, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { TFarm } from "./farmModel";
+import { ErrorHandler } from "@/common/middleware/errorHandler";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import type { EnhancedRequest } from "@/common/utils/type";
+import type { TFarm } from "./farmModel";
+import { FarmRepository } from "./farmRepository";
 
 class FarmController {
   private readonly farmRepository: FarmRepository;
@@ -64,6 +64,37 @@ class FarmController {
     if (!farm) return next(new ErrorHandler(`No Farm found with the id ${id}`));
 
     const serviceResponse = ServiceResponse.success<TFarm>("Fetched", farm);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public deleteFarm: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const id = req.params.id;
+
+    const data = await this.farmRepository.deleteFarmAsync(id);
+
+    if (!data) return next(new ErrorHandler(`No Farm found with the id ${id}`));
+
+    const serviceResponse = ServiceResponse.success<TFarm>("Deleted", data);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public updateFarm: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data = await this.farmRepository.updateFarmAsync(req.body);
+
+    if (!data)
+      return next(
+        new ErrorHandler(`No Farm found with the id ${req.body._id}`)
+      );
+
+    const serviceResponse = ServiceResponse.success<TFarm>("Updated", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 }
