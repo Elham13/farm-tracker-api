@@ -1,11 +1,12 @@
+import express, { type Router } from "express";
 import isProtected from "@/common/middleware/isProtected";
-import express, { Router } from "express";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { cropController } from "./cropController";
 import {
   AddCropBodySchema,
   GetCropByIdSchema,
   GetCropsSchema,
+  UpdateCropSchema,
 } from "./cropModel";
 
 export const cropRouter: Router = express.Router();
@@ -13,15 +14,22 @@ export const cropRouter: Router = express.Router();
 cropRouter
   .route("/")
   .get(isProtected, validateRequest(GetCropsSchema), cropController.getCrops)
-  .post(
+  .post(isProtected, validateRequest(AddCropBodySchema), cropController.addCrop)
+  .put(
     isProtected,
-    validateRequest(AddCropBodySchema),
-    cropController.addCrop
+    validateRequest(UpdateCropSchema),
+    cropController.updateCrop
   );
 
-cropRouter.get(
-  "/:id",
-  isProtected,
-  validateRequest(GetCropByIdSchema),
-  cropController.getCropById
-);
+cropRouter
+  .route("/:id")
+  .get(
+    isProtected,
+    validateRequest(GetCropByIdSchema),
+    cropController.getCropById
+  )
+  .delete(
+    isProtected,
+    validateRequest(GetCropByIdSchema),
+    cropController.deleteCrop
+  );

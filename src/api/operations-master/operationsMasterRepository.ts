@@ -1,10 +1,10 @@
-import { HydratedDocument } from "mongoose";
-import {
-  TAddOperationsMaster,
-  TOperationsMaster,
-  TGetOperationsMasterByIdInput,
-} from "./operationsMasterModel";
+import type { HydratedDocument } from "mongoose";
 import OperationsMaster from "@/common/db/models/operations-master";
+import type {
+  TAddOperationsMaster,
+  TGetOperationsMasterByIdInput,
+  TOperationsMaster,
+} from "./operationsMasterModel";
 
 export class OperationsMasterRepository {
   async getOperationsMastersAsync(

@@ -1,7 +1,7 @@
-import { commonValidations } from "@/common/utils/commonValidation";
-import { CropType } from "@/common/utils/constants/enums";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import z from "zod";
+import { commonValidations } from "@/common/utils/commonValidation";
+import { CropType } from "@/common/utils/constants/enums";
 
 extendZodWithOpenApi(z);
 
@@ -40,13 +40,22 @@ export const AddCropSchema = CropSchema.omit({
   updatedAt: true,
 });
 
+export const UpdateCropSchema = z.object({
+  body: CropSchema.pick({ _id: true }).merge(
+    CropSchema.omit({
+      _id: true,
+      createdAt: true,
+      updatedAt: true,
+    }).partial()
+  ),
+});
+
 export const AddCropBodySchema = z.object({
   body: AddCropSchema,
 });
 
 export const GetCropByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
-  query: z.object({ farmId: commonValidations.id }),
 });
 
 export const GetCropsSchema = z.object({
@@ -57,5 +66,5 @@ export type TCrop = z.infer<typeof CropSchema>;
 export type TAddCrop = z.infer<typeof AddCropSchema>;
 export type TGetCropByIdInput = {
   id: string;
-  farmId: string;
 };
+export type TUpdateCropInput = z.infer<typeof UpdateCropSchema.shape.body>;

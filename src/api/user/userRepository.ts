@@ -1,4 +1,4 @@
-import type { TUser } from "@/api/user/userModel";
+import type { TUpdateUser, TUser } from "@/api/user/userModel";
 import User from "@/common/db/models/user";
 
 export const users: TUser[] = [
@@ -31,5 +31,14 @@ export class UserRepository {
 
   async findByIdAsync(id: string): Promise<TUser | null> {
     return await User.findById(id).select("-password");
+  }
+
+  async deleteUserAsync(id: string): Promise<TUser | null> {
+    return await User.findByIdAndDelete(id);
+  }
+  async updateUserAsync(input: TUpdateUser): Promise<TUser | null> {
+    return await User.findByIdAndUpdate(input?._id, input, {
+      new: true,
+    }).select("-password");
   }
 }

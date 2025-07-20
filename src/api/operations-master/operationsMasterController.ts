@@ -1,10 +1,10 @@
-import { NextFunction, RequestHandler, Response } from "express";
-import { ServiceResponse } from "@/common/models/serviceResponse";
-import { EnhancedRequest } from "@/common/utils/type";
-import { ErrorHandler } from "@/common/middleware/errorHandler";
+import type { NextFunction, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { ErrorHandler } from "@/common/middleware/errorHandler";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import type { EnhancedRequest } from "@/common/utils/type";
+import type { TOperationsMaster } from "./operationsMasterModel";
 import { OperationsMasterRepository } from "./operationsMasterRepository";
-import { TOperationsMaster } from "./operationsMasterModel";
 
 class OperationMasterController {
   private readonly operationsMasterRepository: OperationsMasterRepository;
@@ -18,7 +18,7 @@ class OperationMasterController {
   public addOperationMaster: RequestHandler = async (
     req: EnhancedRequest,
     res: Response,
-    next: NextFunction
+    _next: NextFunction
   ) => {
     const newData =
       await this.operationsMasterRepository.addOperationsMasterAsync(req.body);

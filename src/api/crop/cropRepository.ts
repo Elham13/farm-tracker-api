@@ -1,6 +1,11 @@
-import { HydratedDocument } from "mongoose";
-import { TAddCrop, TCrop, TGetCropByIdInput } from "./cropModel";
+import type { HydratedDocument } from "mongoose";
 import Crop from "@/common/db/models/crop";
+import type {
+  TAddCrop,
+  TCrop,
+  TGetCropByIdInput,
+  TUpdateCropInput,
+} from "./cropModel";
 
 export class CropRepository {
   async getCropsAsync(farmId: string): Promise<TCrop[]> {
@@ -8,12 +13,26 @@ export class CropRepository {
     return crops;
   }
 
-  async getCropByIdAsync(input: TGetCropByIdInput): Promise<TCrop | null> {
-    const { id, farmId } = input;
-    const crop: HydratedDocument<TCrop> | null = await Crop.findOne({
-      _id: id,
-      farm: farmId,
-    });
+  async getCropByIdAsync({ id }: TGetCropByIdInput): Promise<TCrop | null> {
+    const crop: HydratedDocument<TCrop> | null = await Crop.findById(id);
+    if (!crop) return null;
+    return crop.toJSON();
+  }
+
+  async deleteCropAsync(id: string): Promise<TCrop | null> {
+    const crop: HydratedDocument<TCrop> | null = await Crop.findByIdAndDelete(
+      id
+    );
+    if (!crop) return null;
+    return crop.toJSON();
+  }
+
+  async updateCropAsync(input: TUpdateCropInput): Promise<TCrop | null> {
+    const crop: HydratedDocument<TCrop> | null = await Crop.findByIdAndUpdate(
+      input._id,
+      input,
+      { new: true }
+    );
     if (!crop) return null;
     return crop.toJSON();
   }

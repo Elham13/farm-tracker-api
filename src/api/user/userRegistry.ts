@@ -1,7 +1,7 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
 import z from "zod";
 import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
-import { GetUserSchema, UserSchema } from "./userModel";
+import { GetUserSchema, UpdateUserSchema, UserSchema } from "./userModel";
 
 export const userRegistry = new OpenAPIRegistry();
 
@@ -19,5 +19,25 @@ userRegistry.registerPath({
   path: "/users/{id}",
   tags: ["User"],
   request: { params: GetUserSchema.shape.params },
+  responses: createApiResponse(UserSchema, "Success"),
+});
+userRegistry.registerPath({
+  method: "delete",
+  path: "/users/{id}",
+  tags: ["User"],
+  request: { params: GetUserSchema.shape.params },
+  responses: createApiResponse(UserSchema, "Success"),
+});
+userRegistry.registerPath({
+  method: "put",
+  path: "/users",
+  tags: ["User"],
+  request: {
+    body: {
+      content: {
+        "application/json": { schema: UpdateUserSchema.shape.body },
+      },
+    },
+  },
   responses: createApiResponse(UserSchema, "Success"),
 });

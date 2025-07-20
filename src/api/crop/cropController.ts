@@ -1,10 +1,10 @@
-import { NextFunction, RequestHandler, Response } from "express";
-import { ServiceResponse } from "@/common/models/serviceResponse";
-import { EnhancedRequest } from "@/common/utils/type";
-import { ErrorHandler } from "@/common/middleware/errorHandler";
+import type { NextFunction, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
+import { ErrorHandler } from "@/common/middleware/errorHandler";
+import { ServiceResponse } from "@/common/models/serviceResponse";
+import type { EnhancedRequest } from "@/common/utils/type";
+import type { TCrop } from "./cropModel";
 import { CropRepository } from "./cropRepository";
-import { TCrop } from "./cropModel";
 
 class CropController {
   private readonly cropRepository: CropRepository;
@@ -51,16 +51,45 @@ class CropController {
     next: NextFunction
   ) => {
     const id = req.params.id;
-    const farmId = req.query?.farmId as string;
 
     const crop = await this.cropRepository.getCropByIdAsync({
       id,
-      farmId,
     });
 
     if (!crop) return next(new ErrorHandler(`No Crop found with the id ${id}`));
 
     const serviceResponse = ServiceResponse.success<TCrop>("Fetched", crop);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public deleteCrop: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const id = req.params.id;
+
+    const crop = await this.cropRepository.deleteCropAsync(id);
+
+    if (!crop) return next(new ErrorHandler(`No Crop found with the id ${id}`));
+
+    const serviceResponse = ServiceResponse.success<TCrop>("Deleted", crop);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public updateCrop: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const crop = await this.cropRepository.updateCropAsync(req.body);
+
+    if (!crop)
+      return next(
+        new ErrorHandler(`No Crop found with the id ${req.body._id}`)
+      );
+
+    const serviceResponse = ServiceResponse.success<TCrop>("Updated", crop);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 }

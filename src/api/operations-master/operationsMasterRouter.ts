@@ -1,12 +1,12 @@
+import express, { type Router } from "express";
 import isProtected from "@/common/middleware/isProtected";
-import express, { Router } from "express";
 import { validateRequest } from "@/common/utils/httpHandlers";
+import { operationMasterController } from "./operationsMasterController";
 import {
   AddOperationsMasterBodySchema,
   GetOperationsMasterByIdSchema,
   GetOperationsMastersSchema,
 } from "./operationsMasterModel";
-import { operationMasterController } from "./operationsMasterController";
 
 export const operationMasterRouter: Router = express.Router();
 

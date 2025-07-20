@@ -58,12 +58,19 @@ export const CreateUserSchema = z.object({
   }),
 });
 
-export const UpdateUserSchema = UserSchema.partial()
-  .omit({
-    createdAt: true,
-    updatedAt: true,
+export const UpdateUserSchema = z
+  .object({
+    body: UserSchema.pick({ _id: true }).merge(
+      UserSchema.omit({
+        _id: true,
+        createdAt: true,
+        updatedAt: true,
+      }).partial()
+    ),
   })
   .openapi({
     description: "Schema for updating an existing user",
     title: "UpdateUser",
   });
+
+export type TUpdateUser = z.infer<typeof UpdateUserSchema.shape.body>;

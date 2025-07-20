@@ -35,6 +35,44 @@ class UserController {
     const serviceResponse = ServiceResponse.success<TUser>("Fetched", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
+
+  public deleteUser: RequestHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const id = req.params.id;
+    const data = await this.userRepository.deleteUserAsync(id);
+
+    if (!data) {
+      return next(
+        new ErrorHandler(`User with ID ${id} not found`, StatusCodes.NOT_FOUND)
+      );
+    }
+
+    const serviceResponse = ServiceResponse.success<TUser>("Deleted", data);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public updateUser: RequestHandler = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data = await this.userRepository.updateUserAsync(req.body);
+
+    if (!data) {
+      return next(
+        new ErrorHandler(
+          `User with ID ${req.body._id} not found`,
+          StatusCodes.NOT_FOUND
+        )
+      );
+    }
+
+    const serviceResponse = ServiceResponse.success<TUser>("Updated", data);
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
 }
 
 export const userController = new UserController();
