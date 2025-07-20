@@ -1,12 +1,13 @@
+import express, { type Router } from "express";
 import isProtected from "@/common/middleware/isProtected";
-import express, { Router } from "express";
 import { validateRequest } from "@/common/utils/httpHandlers";
+import { operationsController } from "./operationsController";
 import {
   AddOperationsBodySchema,
   GetOperationsByIdSchema,
   GetOperationsSchema,
+  UpdateOperationsBodySchema,
 } from "./operationsModel";
-import { operationsController } from "./operationsController";
 
 export const operationsRouter: Router = express.Router();
 
@@ -21,11 +22,22 @@ operationsRouter
     isProtected,
     validateRequest(AddOperationsBodySchema),
     operationsController.addOperation
+  )
+  .put(
+    isProtected,
+    validateRequest(UpdateOperationsBodySchema),
+    operationsController.updateOperations
   );
 
-operationsRouter.get(
-  "/:id",
-  isProtected,
-  validateRequest(GetOperationsByIdSchema),
-  operationsController.getOperationById
-);
+operationsRouter
+  .route("/:id")
+  .get(
+    isProtected,
+    validateRequest(GetOperationsByIdSchema),
+    operationsController.getOperationById
+  )
+  .delete(
+    isProtected,
+    validateRequest(GetOperationsByIdSchema),
+    operationsController.deleteOperation
+  );

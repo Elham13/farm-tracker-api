@@ -1,11 +1,12 @@
 import { OpenAPIRegistry } from "@asteasolutions/zod-to-openapi";
-import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import z from "zod";
+import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import {
   AddOperationsSchema,
   GetOperationsByIdSchema,
   GetOperationsSchema,
   OperationsSchema,
+  UpdateOperationsSchema,
 } from "./operationsModel";
 
 export const operationsRegistry = new OpenAPIRegistry();
@@ -27,7 +28,16 @@ operationsRegistry.registerPath({
   tags: ["Operations "],
   request: {
     params: GetOperationsByIdSchema.shape.params,
-    query: GetOperationsByIdSchema.shape.query,
+  },
+  responses: createApiResponse(OperationsSchema, "Success"),
+});
+
+operationsRegistry.registerPath({
+  method: "delete",
+  path: "/operations/{id}",
+  tags: ["Operations"],
+  request: {
+    params: GetOperationsByIdSchema.shape.params,
   },
   responses: createApiResponse(OperationsSchema, "Success"),
 });
@@ -41,6 +51,22 @@ operationsRegistry.registerPath({
       content: {
         "application/json": {
           schema: AddOperationsSchema,
+        },
+      },
+    },
+  },
+  responses: createApiResponse(OperationsSchema, "Success"),
+});
+
+operationsRegistry.registerPath({
+  method: "put",
+  path: "/operations",
+  tags: ["Operations"],
+  request: {
+    body: {
+      content: {
+        "application/json": {
+          schema: UpdateOperationsSchema,
         },
       },
     },

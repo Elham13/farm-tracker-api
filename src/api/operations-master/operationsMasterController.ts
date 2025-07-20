@@ -51,12 +51,10 @@ class OperationMasterController {
     next: NextFunction
   ) => {
     const id = req.params.id;
-    const cropId = req.query?.cropId as string;
 
     const data =
       await this.operationsMasterRepository.getOperationsMasterByIdAsync({
         id,
-        cropId,
       });
 
     if (!data)
@@ -66,6 +64,52 @@ class OperationMasterController {
 
     const serviceResponse = ServiceResponse.success<TOperationsMaster>(
       "Fetched",
+      data
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public deleteOperationsMaster: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const id = req.params.id;
+
+    const data =
+      await this.operationsMasterRepository.deleteOperationsMasterAsync(id);
+
+    if (!data)
+      return next(
+        new ErrorHandler(`No Operations Master found with the id ${id}`)
+      );
+
+    const serviceResponse = ServiceResponse.success<TOperationsMaster>(
+      "Deleted",
+      data
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public updateOperationsMaster: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const data =
+      await this.operationsMasterRepository.updateOperationsMasterAsync(
+        req.body
+      );
+
+    if (!data)
+      return next(
+        new ErrorHandler(
+          `No Operation sMaster found with the id ${req.body._id}`
+        )
+      );
+
+    const serviceResponse = ServiceResponse.success<TOperationsMaster>(
+      "Updated",
       data
     );
     res.status(serviceResponse.statusCode).send(serviceResponse);

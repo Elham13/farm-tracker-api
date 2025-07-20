@@ -1,6 +1,6 @@
-import { commonValidations } from "@/common/utils/commonValidation";
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import z from "zod";
+import { commonValidations } from "@/common/utils/commonValidation";
 
 extendZodWithOpenApi(z);
 
@@ -39,16 +39,31 @@ export const AddOperationsMasterBodySchema = z.object({
 
 export const GetOperationsMasterByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
-  query: z.object({ cropId: commonValidations.id }),
 });
 
 export const GetOperationsMastersSchema = z.object({
   query: z.object({ cropId: commonValidations.id }),
 });
 
+export const UpdateOperationsMasterSchema = OperationsMasterSchema.pick({
+  _id: true,
+}).merge(
+  OperationsMasterSchema.omit({
+    _id: true,
+    createdAt: true,
+    updatedAt: true,
+  }).partial()
+);
+
+export const UpdateOperationsMasterBodySchema = z.object({
+  body: UpdateOperationsMasterSchema,
+});
+
 export type TOperationsMaster = z.infer<typeof OperationsMasterSchema>;
 export type TAddOperationsMaster = z.infer<typeof AddOperationsMasterSchema>;
 export type TGetOperationsMasterByIdInput = {
   id: string;
-  cropId: string;
 };
+export type TUpdateOperationsMasterInput = z.infer<
+  typeof UpdateOperationsMasterSchema
+>;

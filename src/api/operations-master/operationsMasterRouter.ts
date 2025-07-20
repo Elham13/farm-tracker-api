@@ -6,6 +6,7 @@ import {
   AddOperationsMasterBodySchema,
   GetOperationsMasterByIdSchema,
   GetOperationsMastersSchema,
+  UpdateOperationsMasterBodySchema,
 } from "./operationsMasterModel";
 
 export const operationMasterRouter: Router = express.Router();
@@ -21,11 +22,22 @@ operationMasterRouter
     isProtected,
     validateRequest(AddOperationsMasterBodySchema),
     operationMasterController.addOperationMaster
+  )
+  .put(
+    isProtected,
+    validateRequest(UpdateOperationsMasterBodySchema),
+    operationMasterController.updateOperationsMaster
   );
 
-operationMasterRouter.get(
-  "/:id",
-  isProtected,
-  validateRequest(GetOperationsMasterByIdSchema),
-  operationMasterController.getOperationMasterById
-);
+operationMasterRouter
+  .route("/:id")
+  .get(
+    isProtected,
+    validateRequest(GetOperationsMasterByIdSchema),
+    operationMasterController.getOperationMasterById
+  )
+  .delete(
+    isProtected,
+    validateRequest(GetOperationsMasterByIdSchema),
+    operationMasterController.deleteOperationsMaster
+  );

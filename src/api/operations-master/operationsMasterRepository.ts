@@ -4,6 +4,7 @@ import type {
   TAddOperationsMaster,
   TGetOperationsMasterByIdInput,
   TOperationsMaster,
+  TUpdateOperationsMasterInput,
 } from "./operationsMasterModel";
 
 export class OperationsMasterRepository {
@@ -19,12 +20,9 @@ export class OperationsMasterRepository {
   async getOperationsMasterByIdAsync(
     input: TGetOperationsMasterByIdInput
   ): Promise<TOperationsMaster | null> {
-    const { id, cropId } = input;
+    const { id } = input;
     const operationMaster: HydratedDocument<TOperationsMaster> | null =
-      await OperationsMaster.findOne({
-        _id: id,
-        crop: cropId,
-      });
+      await OperationsMaster.findById(id);
     if (!operationMaster) return null;
     return operationMaster.toJSON();
   }
@@ -34,5 +32,19 @@ export class OperationsMasterRepository {
   ): Promise<TOperationsMaster> {
     const operationMaster = await OperationsMaster.create(input);
     return operationMaster.toJSON() as unknown as TOperationsMaster;
+  }
+
+  async deleteOperationsMasterAsync(
+    id: string
+  ): Promise<TOperationsMaster | null> {
+    return await OperationsMaster.findByIdAndDelete(id);
+  }
+
+  async updateOperationsMasterAsync(
+    input: TUpdateOperationsMasterInput
+  ): Promise<TOperationsMaster | null> {
+    return await OperationsMaster.findByIdAndUpdate(input._id, input, {
+      new: true,
+    });
   }
 }
