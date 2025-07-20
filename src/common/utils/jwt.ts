@@ -17,8 +17,8 @@ export const generateAccessToken = async (data: {
 };
 
 export const generateRefreshToken = async (data: { userId: string }) => {
-  if (env.JWT_SECRET && env.JWT_EXPIRY) {
-    const token = jwt.sign(data, env.JWT_SECRET, {
+  if (env.JWT_REFRESH_SECRET) {
+    const token = jwt.sign(data, env.JWT_REFRESH_SECRET, {
       expiresIn: "7d",
     });
     return token;
