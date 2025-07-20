@@ -25,5 +25,5 @@ authRouter
   .route("/refresh-token")
   .post(
     validateRequest(RefreshRequestSchema),
-    asyncHandler(authController.login)
+    asyncHandler(authController.refreshToken)
   );

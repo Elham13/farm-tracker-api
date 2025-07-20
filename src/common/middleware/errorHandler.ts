@@ -64,6 +64,7 @@ export const errorHandler = (
     success: false,
     message: err.message,
     statusCode: err.statusCode,
+    data: null,
     stack: env.isProduction ? null : err.stack,
   });
 };

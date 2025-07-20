@@ -64,22 +64,35 @@ export class AuthRepository {
   async refreshTokenAsync(
     token: string
   ): Promise<TRefreshTokenResponse | null> {
-    const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET) as {
-      userId: string;
-    };
+    try {
+      const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET) as {
+        userId: string;
+      };
 
-    const user: HydratedDocument<TUser> | null = await User.findById(
-      decoded.userId
-    );
-    if (!user) return null;
+      const user: HydratedDocument<TUser> | null = await User.findById(
+        decoded.userId
+      );
+      if (!user) return null;
 
-    const newAccessToken = await generateAccessToken({
-      userId: user._id,
-      phone: user.phone,
-      role: user.role as unknown as typeof Role,
-    });
-    const newRefreshToken = await generateRefreshToken({ userId: user._id });
+      const newAccessToken = await generateAccessToken({
+        userId: user._id,
+        phone: user.phone,
+        role: user.role as unknown as typeof Role,
+      });
+      const newRefreshToken = await generateRefreshToken({ userId: user._id });
 
-    return { newAccessToken, newRefreshToken };
+      return { newAccessToken, newRefreshToken };
+    } catch (error) {
+      if (error instanceof jwt.JsonWebTokenError)
+        throw new ErrorHandler("Invalid token", StatusCodes.UNAUTHORIZED);
+
+      if (error instanceof jwt.TokenExpiredError)
+        throw new ErrorHandler("Token expired", StatusCodes.UNAUTHORIZED);
+
+      throw new ErrorHandler(
+        "Authentication failed",
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 }

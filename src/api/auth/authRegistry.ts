@@ -22,7 +22,7 @@ authRegistry.register(
 
 authRegistry.registerPath({
   method: "post",
-  path: "/login",
+  path: "/auth/login",
   tags: ["Auth"],
   request: {
     body: {
@@ -36,7 +36,7 @@ authRegistry.registerPath({
 
 authRegistry.registerPath({
   method: "post",
-  path: "/register",
+  path: "/auth/register",
   tags: ["Auth"],
   request: {
     body: {
@@ -50,7 +50,7 @@ authRegistry.registerPath({
 
 authRegistry.registerPath({
   method: "post",
-  path: "/refresh-token",
+  path: "/auth/refresh-token",
   tags: ["Auth"],
   request: {
     body: {
