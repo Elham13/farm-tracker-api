@@ -4,7 +4,6 @@ import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import {
   AddOperationsMasterSchema,
   GetOperationsMasterByIdSchema,
-  GetOperationsMastersSchema,
   OperationsMasterSchema,
   UpdateOperationsMasterSchema,
 } from "./operationsMasterModel";
@@ -17,9 +16,6 @@ operationsMasterRegistry.registerPath({
   method: "get",
   path: "/operations-master",
   tags: ["Operations Master"],
-  request: {
-    query: GetOperationsMastersSchema.shape.query,
-  },
   responses: createApiResponse(z.array(OperationsMasterSchema), "Success"),
 });
 operationsMasterRegistry.registerPath({

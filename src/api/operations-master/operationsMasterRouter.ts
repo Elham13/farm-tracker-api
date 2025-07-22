@@ -6,7 +6,6 @@ import { operationMasterController } from "./operationsMasterController";
 import {
   AddOperationsMasterBodySchema,
   GetOperationsMasterByIdSchema,
-  GetOperationsMastersSchema,
   UpdateOperationsMasterBodySchema,
 } from "./operationsMasterModel";
 
@@ -14,14 +13,10 @@ export const operationMasterRouter: Router = express.Router();
 
 operationMasterRouter
   .route("/")
-  .get(
-    isProtected,
-    validateRequest(GetOperationsMastersSchema),
-    operationMasterController.getOperationMasters
-  )
+  .get(isProtected, operationMasterController.getOperationMasters)
   .post(
-    upload.single("icon"),
     isProtected,
+    upload.single("icon"),
     validateRequest(AddOperationsMasterBodySchema),
     operationMasterController.addOperationMaster
   )

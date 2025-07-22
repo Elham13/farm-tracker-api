@@ -20,10 +20,12 @@ class OperationMasterController {
     res: Response,
     _next: NextFunction
   ) => {
-    console.log("file: ", req.file);
-    if (req) return res.send("hello");
+    const icon = req.file?.buffer.toString("base64");
     const newData =
-      await this.operationsMasterRepository.addOperationsMasterAsync(req.body);
+      await this.operationsMasterRepository.addOperationsMasterAsync({
+        ...req.body,
+        icon: icon ? `data:${req?.file?.mimetype};base64,${icon}` : "",
+      });
     const serviceResponse = ServiceResponse.success<TOperationsMaster>(
       "Created",
       newData,

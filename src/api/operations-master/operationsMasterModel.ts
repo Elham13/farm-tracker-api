@@ -39,10 +39,6 @@ export const GetOperationsMasterByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
 
-export const GetOperationsMastersSchema = z.object({
-  query: z.object({ cropId: commonValidations.id }),
-});
-
 export const UpdateOperationsMasterSchema = OperationsMasterSchema.pick({
   _id: true,
 }).merge(
