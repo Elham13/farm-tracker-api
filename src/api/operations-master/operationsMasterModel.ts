@@ -9,7 +9,6 @@ export const OperationsMasterSchema = z
     _id: commonValidations.id,
     label: z.string(),
     icon: z.string().optional(),
-    crop: commonValidations.id,
     createdAt: z.string().transform((date) => new Date(date)),
     updatedAt: z.string().transform((date) => new Date(date)),
   })
@@ -21,7 +20,6 @@ export const OperationsMasterSchema = z
       _id: "686f9e8a07c77bc9afcdd536",
       label: "Fertilizer",
       icon: "https://example.com/1.png",
-      crop: "686f9e8a07c77bc9afcdd542",
       createdAt: "2023-10-01T12:00:00Z",
       updatedAt: "2023-10-01T12:00:00Z",
     },

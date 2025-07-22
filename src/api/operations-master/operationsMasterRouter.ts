@@ -1,5 +1,6 @@
 import express, { type Router } from "express";
 import isProtected from "@/common/middleware/isProtected";
+import upload from "@/common/middleware/upload";
 import { validateRequest } from "@/common/utils/httpHandlers";
 import { operationMasterController } from "./operationsMasterController";
 import {
@@ -19,6 +20,7 @@ operationMasterRouter
     operationMasterController.getOperationMasters
   )
   .post(
+    upload.single("icon"),
     isProtected,
     validateRequest(AddOperationsMasterBodySchema),
     operationMasterController.addOperationMaster

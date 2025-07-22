@@ -9,6 +9,7 @@ import connectDb from "@/common/db";
 import { errorHandler, notFoundRouter } from "@/common/middleware/errorHandler";
 // import rateLimiter from "@/common/middleware/rateLimiter";
 import { env } from "@/common/utils/envConfig";
+import staticServe from "./common/middleware/static";
 
 const app: Express = express();
 
@@ -19,8 +20,8 @@ connectDb();
 app.set("trust proxy", true);
 
 // Middlewares
-app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 app.use(helmet());
 app.use(morgan("dev"));
@@ -28,6 +29,7 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api", allRoutes);
+app.use("/uploads", staticServe);
 
 // Swagger UI
 app.use(openAPIRouter);

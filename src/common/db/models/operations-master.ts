@@ -1,11 +1,10 @@
-import { TOperationsMaster } from "@/api/operations-master/operationsMasterModel";
 import mongoose, {
   type Document,
   type Model,
   type ObjectId,
   Schema,
-  Types,
 } from "mongoose";
+import type { TOperationsMaster } from "@/api/operations-master/operationsMasterModel";
 
 interface IOperationsMaster
   extends Document,
@@ -23,11 +22,6 @@ const OperationsMasterSchema = new Schema<IOperationsMaster>(
     },
     icon: {
       type: String,
-    },
-    crop: {
-      type: Types.ObjectId,
-      ref: "Crop",
-      required: true,
     },
   },
   { timestamps: true }

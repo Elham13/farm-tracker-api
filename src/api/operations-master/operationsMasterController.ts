@@ -20,6 +20,8 @@ class OperationMasterController {
     res: Response,
     _next: NextFunction
   ) => {
+    console.log("file: ", req.file);
+    if (req) return res.send("hello");
     const newData =
       await this.operationsMasterRepository.addOperationsMasterAsync(req.body);
     const serviceResponse = ServiceResponse.success<TOperationsMaster>(
