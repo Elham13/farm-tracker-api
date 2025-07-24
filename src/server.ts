@@ -9,7 +9,6 @@ import connectDb from "@/common/db";
 import { errorHandler, notFoundRouter } from "@/common/middleware/errorHandler";
 // import rateLimiter from "@/common/middleware/rateLimiter";
 import { env } from "@/common/utils/envConfig";
-import staticServe from "./common/middleware/static";
 
 const app: Express = express();
 
@@ -29,7 +28,6 @@ app.use(morgan("dev"));
 
 // Routes
 app.use("/api", allRoutes);
-app.use("/uploads", staticServe);
 
 // Swagger UI
 app.use(openAPIRouter);
