@@ -2,6 +2,7 @@ import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import z from "zod";
 import { commonValidations } from "@/common/utils/commonValidation";
 import { CropType } from "@/common/utils/constants/enums";
+import { FarmSchema } from "../farm/farmModel";
 
 extendZodWithOpenApi(z);
 
@@ -62,7 +63,14 @@ export const GetCropsSchema = z.object({
   query: z.object({ farmId: commonValidations.id }),
 });
 
+export const GetCropResponseSchema = z
+  .object({
+    farmObj: FarmSchema,
+  })
+  .merge(CropSchema);
+
 export type TCrop = z.infer<typeof CropSchema>;
+export type TCropExtended = z.infer<typeof GetCropResponseSchema>;
 export type TAddCrop = z.infer<typeof AddCropSchema>;
 export type TGetCropByIdInput = {
   id: string;

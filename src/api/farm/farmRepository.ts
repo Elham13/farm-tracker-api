@@ -1,4 +1,5 @@
 import type { HydratedDocument } from "mongoose";
+import Crop from "@/common/db/models/crop";
 import Farm from "@/common/db/models/farm";
 import type { TAddFarm, TFarm, TUpdateFarmInput } from "./farmModel";
 
@@ -23,6 +24,7 @@ export class FarmRepository {
   }
 
   async deleteFarmAsync(id: string): Promise<TFarm | null> {
+    await Crop.deleteMany({ farm: id });
     return await Farm.findByIdAndDelete(id);
   }
 

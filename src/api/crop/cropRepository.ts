@@ -1,8 +1,9 @@
-import type { HydratedDocument } from "mongoose";
+import { type HydratedDocument, type PipelineStage, Types } from "mongoose";
 import Crop from "@/common/db/models/crop";
 import type {
   TAddCrop,
   TCrop,
+  TCropExtended,
   TGetCropByIdInput,
   TUpdateCropInput,
 } from "./cropModel";
@@ -13,10 +14,29 @@ export class CropRepository {
     return crops;
   }
 
-  async getCropByIdAsync({ id }: TGetCropByIdInput): Promise<TCrop | null> {
-    const crop: HydratedDocument<TCrop> | null = await Crop.findById(id);
-    if (!crop) return null;
-    return crop.toJSON();
+  async getCropByIdAsync({
+    id,
+  }: TGetCropByIdInput): Promise<TCropExtended | null> {
+    const pipelines: PipelineStage[] = [
+      { $match: { _id: new Types.ObjectId(id) } },
+      {
+        $lookup: {
+          from: "farms",
+          localField: "farm",
+          foreignField: "_id",
+          as: "farmObj",
+        },
+      },
+      {
+        $unwind: {
+          path: "$farmObj",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ];
+    const data: TCropExtended[] = await Crop.aggregate(pipelines);
+    if (!data || !data?.length) return null;
+    return data[0];
   }
 
   async deleteCropAsync(id: string): Promise<TCrop | null> {

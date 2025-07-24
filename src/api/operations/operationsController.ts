@@ -32,9 +32,12 @@ class OperationsController {
     req: EnhancedRequest,
     res: Response
   ) => {
-    const data = await this.operationsRepository.getOperationsAsync(
-      req.query.masterId as string
-    );
+    const masterId = req.query.masterId as string;
+    const cropId = req.query.cropId as string;
+    const data = await this.operationsRepository.getOperationsAsync({
+      masterId,
+      cropId,
+    });
     const serviceResponse = ServiceResponse.success<TOperations[]>(
       "Fetched",
       data

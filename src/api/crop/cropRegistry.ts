@@ -5,6 +5,7 @@ import {
   AddCropSchema,
   CropSchema,
   GetCropByIdSchema,
+  GetCropResponseSchema,
   GetCropsSchema,
   UpdateCropSchema,
 } from "./cropModel";
@@ -29,7 +30,7 @@ cropRegistry.registerPath({
   request: {
     params: GetCropByIdSchema.shape.params,
   },
-  responses: createApiResponse(CropSchema, "Success"),
+  responses: createApiResponse(GetCropResponseSchema, "Success"),
 });
 cropRegistry.registerPath({
   method: "delete",

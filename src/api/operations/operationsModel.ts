@@ -1,6 +1,7 @@
 import { extendZodWithOpenApi } from "@asteasolutions/zod-to-openapi";
 import z from "zod";
 import { commonValidations } from "@/common/utils/commonValidation";
+import { OperationsMasterSchema } from "../operations-master/operationsMasterModel";
 
 extendZodWithOpenApi(z);
 
@@ -8,6 +9,7 @@ export const OperationsSchema = z
   .object({
     _id: commonValidations.id,
     operationMaster: commonValidations.id,
+    cropId: commonValidations.id,
     date: z.string().transform((date) => new Date(date)),
     mode: z.string(),
     quantity: z.number(),
@@ -25,6 +27,7 @@ export const OperationsSchema = z
     example: {
       _id: "686f9e8a07c77bc9adcdd536",
       operationMaster: "686f9e8a07c77bc9adcdd539",
+      cropId: "686f9e8a07c77bc9adcdd529",
       date: "2025-07-13T00:00:00Z",
       mode: "Chemical",
       quantity: 2,
@@ -52,7 +55,10 @@ export const GetOperationsByIdSchema = z.object({
 });
 
 export const GetOperationsSchema = z.object({
-  query: z.object({ masterId: commonValidations.id }),
+  query: z.object({
+    masterId: commonValidations.id,
+    cropId: commonValidations.id,
+  }),
 });
 
 export const UpdateOperationsSchema = OperationsSchema.pick({
@@ -69,9 +75,19 @@ export const UpdateOperationsBodySchema = z.object({
   body: UpdateOperationsSchema,
 });
 
+export const GetOperationsResponseSchema = z
+  .object({
+    masterObj: OperationsMasterSchema,
+  })
+  .merge(OperationsSchema);
+
 export type TOperations = z.infer<typeof OperationsSchema>;
+export type TOperationsExtended = z.infer<typeof GetOperationsResponseSchema>;
 export type TAddOperations = z.infer<typeof AddOperationsSchema>;
 export type TGetOperationsByIdInput = {
   id: string;
 };
 export type TUpdateOperationsInput = z.infer<typeof UpdateOperationsSchema>;
+export type TGetOperationsInput = z.infer<
+  typeof GetOperationsSchema.shape.query
+>;

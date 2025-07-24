@@ -1,4 +1,3 @@
-import { TOperations } from "@/api/operations/operationsModel";
 import mongoose, {
   type Document,
   type Model,
@@ -6,12 +5,14 @@ import mongoose, {
   Schema,
   Types,
 } from "mongoose";
+import type { TOperations } from "@/api/operations/operationsModel";
 
 interface IOperationsSchema
   extends Document,
-    Omit<TOperations, "_id" | "operationMaster"> {
+    Omit<TOperations, "_id" | "operationMaster" | "cropId"> {
   _id: ObjectId;
   operationMaster: ObjectId;
+  cropId: ObjectId;
 }
 
 const OperationsSchema = new Schema<IOperationsSchema>(
@@ -27,6 +28,11 @@ const OperationsSchema = new Schema<IOperationsSchema>(
     operationMaster: {
       type: Types.ObjectId,
       ref: "OperationsMaster",
+      required: true,
+    },
+    cropId: {
+      type: Types.ObjectId,
+      ref: "Crop",
       required: true,
     },
     quantity: {

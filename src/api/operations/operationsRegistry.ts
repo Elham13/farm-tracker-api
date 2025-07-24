@@ -4,6 +4,7 @@ import { createApiResponse } from "@/api-docs/openAPIResponseBuilders";
 import {
   AddOperationsSchema,
   GetOperationsByIdSchema,
+  GetOperationsResponseSchema,
   GetOperationsSchema,
   OperationsSchema,
   UpdateOperationsSchema,
@@ -20,7 +21,7 @@ operationsRegistry.registerPath({
   request: {
     query: GetOperationsSchema.shape.query,
   },
-  responses: createApiResponse(z.array(OperationsSchema), "Success"),
+  responses: createApiResponse(z.array(GetOperationsResponseSchema), "Success"),
 });
 operationsRegistry.registerPath({
   method: "get",
