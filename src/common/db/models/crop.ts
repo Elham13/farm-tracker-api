@@ -20,6 +20,9 @@ const CropSchema = new Schema<ICropSchema>(
       type: String,
       required: [true, "name is required"],
     },
+    variety: {
+      type: String,
+    },
     type: {
       type: String,
       enum: {
@@ -28,8 +31,16 @@ const CropSchema = new Schema<ICropSchema>(
       },
       required: [true, "type is required"],
     },
-    icon: {
-      type: String,
+    areaUnderCultivation: {
+      type: Number,
+      required: true,
+    },
+    dateOfSowing: {
+      type: Date,
+      required: true,
+    },
+    dateOfHarvest: {
+      type: Date,
     },
     farm: {
       type: Types.ObjectId,

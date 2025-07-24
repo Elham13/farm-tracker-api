@@ -10,13 +10,19 @@ export const CropSchema = z
   .object({
     _id: commonValidations.id,
     name: z.string(),
+    variety: z.string().optional(),
+    areaUnderCultivation: z.number(),
     type: z.nativeEnum(CropType, {
       errorMap: () => ({
         message: `Type must be either ${CropType.CURRENT} or ${CropType.PREVIOUS}`,
       }),
     }),
-    icon: z.string().optional(),
     farm: commonValidations.id,
+    dateOfSowing: z.string().transform((date) => new Date(date)),
+    dateOfHarvest: z
+      .string()
+      .transform((date) => new Date(date))
+      .optional(),
     createdAt: z.string().transform((date) => new Date(date)),
     updatedAt: z.string().transform((date) => new Date(date)),
   })
@@ -27,9 +33,12 @@ export const CropSchema = z
     example: {
       _id: "686f9e8a07c77bc9afcdd546",
       name: "Corn",
+      variety: "Sweet Corn",
       type: "Current",
-      icon: "https://example.com/1.png",
+      areaUnderCultivation: 10,
       farm: "686f9e8a07c77bc9afcdd542",
+      dateOfSowing: "2023-10-01T12:00:00Z",
+      dateOfHarvest: "2023-10-01T12:00:00Z",
       createdAt: "2023-10-01T12:00:00Z",
       updatedAt: "2023-10-01T12:00:00Z",
     },

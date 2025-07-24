@@ -21,6 +21,11 @@ const OperationsSchema = new Schema<IOperationsSchema>(
       type: Date,
       required: [true, "date is required"],
     },
+    name: { type: String },
+    motorCapacity: { type: String },
+    energySource: { type: String },
+    areaCovered: { type: Number, required: true },
+    areaCoveredUnit: { type: String, required: true },
     mode: {
       type: String,
       required: true,
@@ -35,19 +40,24 @@ const OperationsSchema = new Schema<IOperationsSchema>(
       ref: "Crop",
       required: true,
     },
-    quantity: {
+    quantityToday: {
+      type: Number,
+    },
+    quantityUnit: {
+      type: String,
+    },
+    durationToday: {
       type: Number,
       required: true,
     },
-    unit: {
-      type: String,
-      required: true,
-    },
-    duration: {
+    durationTodayUnit: {
       type: String,
       required: true,
     },
     proof: {
+      type: String,
+    },
+    documentName: {
       type: String,
     },
     description: {
