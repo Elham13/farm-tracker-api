@@ -7,7 +7,7 @@ export const LoginRequestSchema = z.object({
       .string()
       .length(10, "Phone number must be exactly 10 digits")
       .regex(/^\d+$/, "Phone must be numeric"),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    password: z.string().min(4, "PIN must be 4 digits"),
   }),
 });
 

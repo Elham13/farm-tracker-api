@@ -24,9 +24,6 @@ const UserSchema = new Schema<IUserSchema>(
       required: [true, "phone is required"],
       unique: true,
     },
-    email: {
-      type: String,
-    },
     password: {
       type: String,
       required: [true, "password is required"],

@@ -80,7 +80,6 @@ function compareUsers(mockUser: TUser, responseUser: TUser) {
 
   expect(responseUser._id).toEqual(mockUser._id);
   expect(responseUser.name).toEqual(mockUser.name);
-  expect(responseUser.email).toEqual(mockUser.email);
   expect(responseUser.phone).toEqual(mockUser.phone);
   expect(responseUser.password).toEqual(mockUser.password);
   expect(new Date(responseUser.createdAt)).toEqual(mockUser.createdAt);

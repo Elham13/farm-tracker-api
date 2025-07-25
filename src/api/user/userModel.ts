@@ -14,8 +14,7 @@ export const UserSchema = z
       .string()
       .length(10, "Phone number must be exactly 10 digits")
       .regex(/^\d+$/, "Phone must be numeric"),
-    email: z.string().email(),
-    password: z.string().min(6, "Password must be at least 6 characters"),
+    password: z.string().min(4, "PIN must be 4 digits"),
     role: z.nativeEnum(Role, {
       errorMap: () => ({
         message: `Role must be either ${Role.ADMIN} or ${Role.FARMER}`,
@@ -32,7 +31,6 @@ export const UserSchema = z
       _id: "686f9e8a07c77bc9afcdd546",
       name: "John Doe",
       phone: "9838838283",
-      email: "john@example.com",
       password: "abc123",
       role: Role.ADMIN,
       createdAt: "2023-10-01T12:00:00Z",

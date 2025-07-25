@@ -14,7 +14,6 @@ describe("userService", () => {
     {
       _id: "686f9e8a07c77bc9afcdd546",
       name: "Alice",
-      email: "alice@example.com",
       phone: "92883883884",
       password: "abc123",
       role: "ADMIN",
@@ -24,7 +23,6 @@ describe("userService", () => {
     {
       _id: "686f9e8a07c77bc9afcdd547",
       name: "Robert",
-      email: "Robert@example.com",
       phone: "92883883884",
       password: "abc123",
       role: "ADMIN",

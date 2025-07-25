@@ -22,7 +22,7 @@ const OperationsSchema = new Schema<IOperationsSchema>(
       required: [true, "date is required"],
     },
     name: { type: String },
-    motorCapacity: { type: String },
+    motorCapacityInHP: { type: Number },
     energySource: { type: String },
     areaCovered: { type: Number, required: true },
     areaCoveredUnit: { type: String, required: true },
@@ -30,6 +30,7 @@ const OperationsSchema = new Schema<IOperationsSchema>(
       type: String,
       required: true,
     },
+    tractorOwnership: { type: String },
     operationMaster: {
       type: Types.ObjectId,
       ref: "OperationsMaster",

@@ -1,4 +1,3 @@
-import { TFarm } from "@/api/farm/farmModel";
 import mongoose, {
   type Document,
   type Model,
@@ -6,6 +5,7 @@ import mongoose, {
   Schema,
   Types,
 } from "mongoose";
+import type { TFarm } from "@/api/farm/farmModel";
 
 interface IFarmSchema extends Document, Omit<TFarm, "_id" | "user"> {
   _id: ObjectId;
@@ -19,11 +19,18 @@ const FarmSchema = new Schema<IFarmSchema>(
       required: [true, "name is required"],
     },
     size: {
-      type: String,
+      type: Number,
       required: [true, "size is required"],
+    },
+    sizeUnit: {
+      type: String,
+      required: [true, "sizeUnit is required"],
     },
     address: {
       type: String,
+    },
+    pinCode: {
+      type: Number,
     },
     geo: {
       type: {

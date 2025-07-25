@@ -8,8 +8,10 @@ export const FarmSchema = z
   .object({
     _id: commonValidations.id,
     name: z.string(),
-    size: z.string(),
+    size: z.number(),
+    sizeUnit: z.string(),
     address: z.string(),
+    pinCode: z.number(),
     user: commonValidations.id,
     geo: z.object({ lat: z.number(), long: z.number() }).optional(),
     createdAt: z.string().transform((date) => new Date(date)),
@@ -22,8 +24,10 @@ export const FarmSchema = z
     example: {
       _id: "686f9e8a07c77bc9afcdd546",
       name: "Test Farm",
-      size: "3 acres",
+      size: 2,
+      sizeUnit: "acres",
       address: "Delhi",
+      pinCode: 110014,
       user: "686f9e8a07c77bc9afcdd543",
       createdAt: "2023-10-01T12:00:00Z",
       updatedAt: "2023-10-01T12:00:00Z",
