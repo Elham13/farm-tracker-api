@@ -1,6 +1,7 @@
 import express, { type Router } from "express";
 import { authRouter } from "./auth/authRouter";
 import { cropRouter } from "./crop/cropRouter";
+import { docsRouter } from "./docs/docsRouter";
 import { efRouter } from "./emission-factor/efRouter";
 import { efmRouter } from "./emission-factor-master/efmRouter";
 import { farmRouter } from "./farm/farmRouter";
@@ -20,3 +21,4 @@ allRoutes.use("/operations-master", operationMasterRouter);
 allRoutes.use("/operations", operationsRouter);
 allRoutes.use("/efm", efmRouter);
 allRoutes.use("/emission-factor", efRouter);
+allRoutes.use("/docs", docsRouter);
