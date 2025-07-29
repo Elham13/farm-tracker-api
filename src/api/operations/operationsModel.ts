@@ -23,6 +23,8 @@ export const OperationsSchema = z
     quantityUnit: z.string().optional(),
     durationToday: z.number(),
     durationTodayUnit: z.string(),
+    waterConsumed: z.number().optional(),
+    waterConsumedUnit: z.string().optional(),
     description: z.string(),
     createdAt: z.date(),
     updatedAt: z.date(),

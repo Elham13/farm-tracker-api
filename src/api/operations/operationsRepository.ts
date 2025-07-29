@@ -2,6 +2,7 @@ import { type HydratedDocument, type PipelineStage, Types } from "mongoose";
 import Operations from "@/common/db/models/operations";
 import OperationsMaster from "@/common/db/models/operations-master";
 import {
+  calculateFertilizerEmission,
   calculateSowingEmission,
   calculateTillingEmissions,
 } from "@/common/utils/helpers/emission-helpers";
@@ -84,6 +85,19 @@ export class OperationsRepository {
           unit: input?.areaCoveredUnit,
           isOwner: input?.tractorOwnership === "Own",
           mode: input?.mode,
+        });
+        break;
+      }
+      case "Fertilizer": {
+        calculateFertilizerEmission({
+          areaCovered: input?.areaCovered,
+          unit: input?.areaCoveredUnit,
+          isOwner: input?.tractorOwnership === "Own",
+          mode: input?.mode,
+          fertilizerType: input?.fertilizerType ?? "",
+          quantityToday: input?.quantityToday ?? 0,
+          quantityUnit: input?.quantityUnit ?? "",
+          waterConsumed: input?.waterConsumed ?? 0,
         });
         break;
       }

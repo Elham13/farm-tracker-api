@@ -11,3 +11,10 @@ commonRouter.get(
   isAdmin,
   commonController.initializeEmissionFactors
 );
+
+commonRouter.get(
+  "/emissions",
+  isProtected,
+  isAdmin,
+  commonController.getAllEmission
+);

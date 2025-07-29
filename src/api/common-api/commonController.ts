@@ -1,7 +1,7 @@
 import type { RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ServiceResponse } from "@/common/models/serviceResponse";
-import type { EnhancedRequest } from "@/common/utils/type";
+import type { EnhancedRequest, IEmission } from "@/common/utils/type";
 import { CommonRepository } from "./commonRepository";
 
 class CommonController {
@@ -19,6 +19,19 @@ class CommonController {
     const serviceResponse = ServiceResponse.success<null>(
       "Done",
       null,
+      StatusCodes.OK
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public getAllEmission: RequestHandler = async (
+    _req: EnhancedRequest,
+    res: Response
+  ) => {
+    const data = await this.commonRepository.getAllEmissionsAsync();
+    const serviceResponse = ServiceResponse.success<IEmission[]>(
+      "Fetched",
+      data,
       StatusCodes.OK
     );
     res.status(serviceResponse.statusCode).send(serviceResponse);

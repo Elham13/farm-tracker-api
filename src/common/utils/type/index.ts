@@ -15,13 +15,14 @@ export interface EnhancedRequest extends Request {
 
 export interface IEmission {
   operation: string;
-  emission: number;
-  scope: string;
+  emission?: number;
+  scope?: string;
   unit: string;
   calculation: string;
   category: string;
   categoryUnit: string;
   electricityConsumption?: number;
+  waterConsumption?: number;
 }
 
 export interface IEmissionFactors {

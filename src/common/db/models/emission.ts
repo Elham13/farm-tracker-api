@@ -6,13 +6,14 @@ type TEmissionSchema = IEmission & Document;
 const EmissionSchema = new Schema<TEmissionSchema>(
   {
     operation: { type: String, required: true },
-    emission: { type: Number, required: true },
-    scope: { type: String, required: true },
+    emission: { type: Number },
+    scope: { type: String },
     unit: { type: String, required: true },
     calculation: { type: String, required: true },
     category: { type: String, required: true },
     categoryUnit: { type: String, required: true },
     electricityConsumption: { type: Number },
+    waterConsumption: { type: Number },
   },
   {
     timestamps: true,

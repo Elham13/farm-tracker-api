@@ -58,6 +58,12 @@ const OperationsSchema = new Schema<IOperationsSchema>(
       type: String,
       required: true,
     },
+    waterConsumed: {
+      type: Number,
+    },
+    waterConsumedUnit: {
+      type: String,
+    },
     description: {
       type: String,
       required: true,
