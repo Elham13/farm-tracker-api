@@ -11,9 +11,9 @@ export class OperationsMasterRepository {
   async getOperationsMastersAsync(
     corpId: string
   ): Promise<TOperationsMaster[]> {
-    const operationsMaster: TOperationsMaster[] = await OperationsMaster.find({
+    const operationsMaster: TOperationsMaster[] = (await OperationsMaster.find({
       crop: corpId,
-    });
+    }).sort({ createdAt: 1 })) as unknown as TOperationsMaster[];
     return operationsMaster;
   }
 

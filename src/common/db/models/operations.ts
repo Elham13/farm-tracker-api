@@ -47,6 +47,9 @@ const OperationsSchema = new Schema<IOperationsSchema>(
     quantityUnit: {
       type: String,
     },
+    fertilizerType: {
+      type: String,
+    },
     durationToday: {
       type: Number,
       required: true,
@@ -54,12 +57,6 @@ const OperationsSchema = new Schema<IOperationsSchema>(
     durationTodayUnit: {
       type: String,
       required: true,
-    },
-    proof: {
-      type: String,
-    },
-    documentName: {
-      type: String,
     },
     description: {
       type: String,

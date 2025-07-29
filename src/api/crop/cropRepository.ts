@@ -1,5 +1,7 @@
 import { type HydratedDocument, type PipelineStage, Types } from "mongoose";
 import Crop from "@/common/db/models/crop";
+import Docs from "@/common/db/models/docs";
+import Operations from "@/common/db/models/operations";
 import type {
   TAddCrop,
   TCrop,
@@ -40,6 +42,9 @@ export class CropRepository {
   }
 
   async deleteCropAsync(id: string): Promise<TCrop | null> {
+    await Docs.deleteMany({ cropId: new Types.ObjectId(id) });
+    await Operations.deleteMany({ cropId: new Types.ObjectId(id) });
+
     const crop: HydratedDocument<TCrop> | null = await Crop.findByIdAndDelete(
       id
     );

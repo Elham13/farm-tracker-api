@@ -1,44 +1,112 @@
-import mongoose, {
-  type Document,
-  type Model,
-  type ObjectId,
-  Schema,
-  Types,
-} from "mongoose";
-import type { TEF } from "@/api/emission-factor/efModel";
+import mongoose, { type Document, type Model, Schema } from "mongoose";
+import type { IEmissionFactors } from "@/common/utils/type";
 
-interface IEFSchema
-  extends Document,
-    Omit<TEF, "_id" | "emission_factor_master"> {
-  _id: ObjectId;
-  emission_factor_master: ObjectId;
-}
+type TEmissionFactors = IEmissionFactors & Document;
 
-const EFMSchema = new Schema<IEFSchema>(
+const EmissionFactorSchema = new Schema<TEmissionFactors>(
   {
-    mode: {
-      type: String,
-      required: [true, "mode is required"],
-    },
-    operation: {
-      type: String,
-      required: [true, "operation is required"],
-    },
-    emission_factor_master: {
-      type: Types.ObjectId,
-      ref: "EmissionFactorMaster",
+    // Tilling - with both acre and hectare values
+    tractorEmFctTilling: {
+      type: {
+        perAcre: { type: Number, required: true },
+        perHectare: { type: Number, required: true },
+      },
       required: true,
     },
-    value: { type: Number, required: true },
-    value_unit: { type: String, required: true },
-    duration: { type: Number, required: true },
-    duration_unit: { type: String, required: true },
+
+    // Sowing - with both acre and hectare values
+    tractorEmFctSowing: {
+      type: {
+        perAcre: { type: Number, required: true },
+        perHectare: { type: Number, required: true },
+      },
+      required: true,
+    },
+
+    // Drone operations
+    dronePowerConsumption: { type: Number }, // kWh/acre - currently unknown
+    // kgCO2e/kWh
+    gridPowerEmFct: {
+      type: Number,
+      required: true,
+      description: "Grid power emission factor in kgCO2e per kWh",
+    },
+    // kgCO2e/acre
+    droneEmFctSowing: {
+      type: Number,
+      required: true,
+      description: "Drone Emission Factor Sowing in kgCO2e per acre",
+    },
+
+    // Fertilizer
+    chemicalEmFctFertilizer: {
+      type: Number,
+      required: true,
+      description:
+        "Emission factor for chemical fertilizer in kgCO2e per kg or liter",
+    },
+    organicEmFctFertilizer: {
+      type: Number,
+      required: true,
+      description:
+        "Emission factor for organic fertilizer in kgCO2e per kg or liter",
+    },
+
+    // Pesticide
+    chemicalEmFctPesticide: {
+      type: Number,
+      required: true,
+      description:
+        "Emission factor for chemical pesticide in kgCO2e per kg or liter",
+    },
+    organicEmFctPesticide: {
+      type: Number,
+      required: true,
+      description:
+        "Emission factor for organic pesticide in kgCO2e per kg or liter",
+    },
+
+    // Irrigation
+    waterPerHPPerHour: {
+      type: Number,
+      required: true,
+      description: "Water consumption per HP per hour in liters",
+    },
+    energyPerHPPerHour: {
+      type: Number,
+      required: true,
+      description: "Energy consumption per HP per hour in kWh",
+    },
+    dieselPerHPPerHour: {
+      type: Number,
+      required: true,
+      description: "Diesel consumption per HP per hour in liters",
+    },
+    dieselEmFctEnergy: {
+      type: Number,
+      required: true,
+      description: "Diesel emission factor in kgCO2e per liter",
+    },
+
+    // Harvesting - with both acre and hectare values
+    harvesterEmFctHarvesting: {
+      type: {
+        perAcre: { type: Number, required: true },
+        perHectare: { type: Number, required: true },
+      },
+      required: true,
+    },
+
+    // Metadata
+    lastUpdated: { type: Date, default: Date.now },
+    source: { type: String, default: "EartTwin App Default Values" },
+    version: { type: String, default: "1.0" },
   },
   { timestamps: true }
 );
 
-const EmissionFactor: Model<IEFSchema> =
+const EmissionFactor: Model<TEmissionFactors> =
   mongoose.models.EmissionFactor ||
-  mongoose.model<IEFSchema>("EmissionFactor", EFMSchema);
+  mongoose.model<TEmissionFactors>("EmissionFactor", EmissionFactorSchema);
 
 export default EmissionFactor;

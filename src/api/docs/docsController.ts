@@ -18,12 +18,7 @@ class DocsController {
     res: Response,
     _next: NextFunction
   ) => {
-    const docUri = req.file?.buffer.toString("base64");
-
-    const newData = await this.docsRepository.addDocAsync({
-      ...req.body,
-      docUri: docUri ? `data:${req?.file?.mimetype};base64,${docUri}` : "",
-    });
+    const newData = await this.docsRepository.addDocAsync(req.body);
     const serviceResponse = ServiceResponse.success<TDoc>(
       "Created",
       newData,

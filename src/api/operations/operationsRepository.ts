@@ -1,5 +1,10 @@
 import { type HydratedDocument, type PipelineStage, Types } from "mongoose";
 import Operations from "@/common/db/models/operations";
+import OperationsMaster from "@/common/db/models/operations-master";
+import {
+  calculateSowingEmission,
+  calculateTillingEmissions,
+} from "@/common/utils/helpers/emission-helpers";
 import type {
   TAddOperations,
   TGetOperationsByIdInput,
@@ -55,6 +60,37 @@ export class OperationsRepository {
   }
 
   async addOperationsAsync(input: TAddOperations): Promise<TOperations> {
+    const operationMaster = await OperationsMaster.findById(
+      input?.operationMaster
+    );
+
+    if (!operationMaster)
+      throw new Error(
+        `No operation found with the id ${input?.operationMaster}`
+      );
+
+    switch (operationMaster?.label) {
+      case "Tilling": {
+        calculateTillingEmissions({
+          areaCovered: input?.areaCovered,
+          unit: input?.areaCoveredUnit,
+          isOwner: input?.tractorOwnership === "Own",
+        });
+        break;
+      }
+      case "Sowing": {
+        calculateSowingEmission({
+          areaCovered: input?.areaCovered,
+          unit: input?.areaCoveredUnit,
+          isOwner: input?.tractorOwnership === "Own",
+          mode: input?.mode,
+        });
+        break;
+      }
+      default:
+        break;
+    }
+
     const operation = await Operations.create(input);
     return operation.toJSON() as unknown as TOperations;
   }
