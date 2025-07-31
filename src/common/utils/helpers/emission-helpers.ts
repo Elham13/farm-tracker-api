@@ -143,7 +143,7 @@ export const calculateFertilizerEmission = async (args: IFertilizerArgs) => {
   await Emission.create(payload);
 
   await Emission.create({
-    operation,
+    operation: `${operation} Water`,
     waterConsumption: waterInKiloLiters,
     category: "Water",
     categoryUnit: "kL",
@@ -245,7 +245,7 @@ export const calculatePesticideEmission = async (args: IPesticideArgs) => {
 
   // Water consumption
   await Emission.create({
-    operation,
+    operation: `${operation} Water`,
     waterConsumption: waterInKiloLiters,
     category: "Water",
     categoryUnit: "kL",
@@ -352,7 +352,7 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
 
     // Diesel consumption record
     await Emission.create({
-      operation: `${operation} Diesel`,
+      operation: `${operation} Diesel Consumption`,
       dieselConsumption: dieselConsumed,
       category: "Diesel",
       categoryUnit: "liters",
@@ -362,7 +362,7 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
 
     // Diesel emissions record (Scope 1)
     await Emission.create({
-      operation: `${operation} Emissions`,
+      operation: `${operation} Diesel`,
       emission,
       scope: "Scope 1",
       category: "GHG",
@@ -375,7 +375,7 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
 
     // Grid emissions record (Scope 2)
     await Emission.create({
-      operation: `${operation} Emissions`,
+      operation: `${operation} Grid`,
       emission,
       scope: "Scope 2",
       category: "GHG",

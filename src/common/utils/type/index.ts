@@ -23,6 +23,7 @@ export interface IEmission {
   categoryUnit: string;
   electricityConsumption?: number;
   waterConsumption?: number;
+  dieselConsumption?: number;
 }
 
 export interface IEmissionFactors {

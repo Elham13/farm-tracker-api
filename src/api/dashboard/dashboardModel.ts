@@ -3,4 +3,5 @@ export interface IDashboardCount {
   admins: number;
   farms: number;
   crops: number;
+  operations: number;
 }

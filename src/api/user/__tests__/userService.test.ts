@@ -41,7 +41,7 @@ describe("userService", () => {
       (userRepositoryInstance.findAllAsync as Mock).mockReturnValue(mockUsers);
 
       // Act
-      const result = await userRepositoryInstance.findAllAsync();
+      const result = await userRepositoryInstance.findAllAsync({});
       const serviceResponse = ServiceResponse.success<TUser[]>(
         "Fetched",
         result
@@ -61,7 +61,7 @@ describe("userService", () => {
       );
 
       // Act
-      const result = await userRepositoryInstance.findAllAsync();
+      const result = await userRepositoryInstance.findAllAsync({});
       const serviceResponse = ServiceResponse.failure("Fetched", result);
 
       // Assert

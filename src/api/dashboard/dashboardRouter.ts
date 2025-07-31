@@ -8,3 +8,7 @@ export const dashboardRouter: Router = express.Router();
 dashboardRouter
   .route("/get-dashboard-counts")
   .get(isProtected, isAdmin, dashboardController.getDashboardCounts);
+
+dashboardRouter
+  .route("/get-all-operations")
+  .get(isProtected, isAdmin, dashboardController.getAllOperations);

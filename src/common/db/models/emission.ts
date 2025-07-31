@@ -14,6 +14,7 @@ const EmissionSchema = new Schema<TEmissionSchema>(
     categoryUnit: { type: String, required: true },
     electricityConsumption: { type: Number },
     waterConsumption: { type: Number },
+    dieselConsumption: { type: Number },
   },
   {
     timestamps: true,
