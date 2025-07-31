@@ -40,6 +40,12 @@ export const UserSchema = z
 
 export type TUser = z.infer<typeof UserSchema>;
 
+export const GetUsersQuerySchema = z.object({
+  role: UserSchema.shape.role.optional(),
+});
+
+export type TGetUserQuery = z.infer<typeof GetUsersQuerySchema>;
+
 // Input Validation for 'GET users/:id' endpoint
 export const GetUserSchema = z.object({
   params: z.object({ id: commonValidations.id }),

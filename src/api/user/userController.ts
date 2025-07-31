@@ -12,8 +12,8 @@ class UserController {
     this.userRepository = repository;
   }
 
-  public getUsers: RequestHandler = async (_req: Request, res: Response) => {
-    const data = await this.userRepository.findAllAsync();
+  public getUsers: RequestHandler = async (req: Request, res: Response) => {
+    const data = await this.userRepository.findAllAsync(req.query);
     const serviceResponse = ServiceResponse.success<TUser[]>("Fetched", data);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };

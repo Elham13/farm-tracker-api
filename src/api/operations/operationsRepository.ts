@@ -1,8 +1,13 @@
 import { type HydratedDocument, type PipelineStage, Types } from "mongoose";
+import Crop from "@/common/db/models/crop";
 import Operations from "@/common/db/models/operations";
 import OperationsMaster from "@/common/db/models/operations-master";
+import { CropType } from "@/common/utils/constants/enums";
 import {
   calculateFertilizerEmission,
+  calculateHarvestingEmission,
+  calculateIrrigationEmission,
+  calculatePesticideEmission,
   calculateSowingEmission,
   calculateTillingEmissions,
 } from "@/common/utils/helpers/emission-helpers";
@@ -74,7 +79,7 @@ export class OperationsRepository {
       case "Tilling": {
         calculateTillingEmissions({
           areaCovered: input?.areaCovered,
-          unit: input?.areaCoveredUnit,
+          areaCoveredUnit: input?.areaCoveredUnit,
           isOwner: input?.tractorOwnership === "Own",
         });
         break;
@@ -82,7 +87,7 @@ export class OperationsRepository {
       case "Sowing": {
         calculateSowingEmission({
           areaCovered: input?.areaCovered,
-          unit: input?.areaCoveredUnit,
+          areaCoveredUnit: input?.areaCoveredUnit,
           isOwner: input?.tractorOwnership === "Own",
           mode: input?.mode,
         });
@@ -91,7 +96,7 @@ export class OperationsRepository {
       case "Fertilizer": {
         calculateFertilizerEmission({
           areaCovered: input?.areaCovered,
-          unit: input?.areaCoveredUnit,
+          areaCoveredUnit: input?.areaCoveredUnit,
           isOwner: input?.tractorOwnership === "Own",
           mode: input?.mode,
           fertilizerType: input?.fertilizerType ?? "",
@@ -101,9 +106,50 @@ export class OperationsRepository {
         });
         break;
       }
+      case "Pesticide": {
+        calculatePesticideEmission({
+          areaCovered: input?.areaCovered,
+          areaCoveredUnit: input?.areaCoveredUnit,
+          isOwner: input?.tractorOwnership === "Own",
+          mode: input?.mode,
+          fertilizerType: input?.fertilizerType ?? "",
+          quantityToday: input?.quantityToday ?? 0,
+          quantityUnit: input?.quantityUnit ?? "",
+          waterConsumed: input?.waterConsumed ?? 0,
+        });
+        break;
+      }
+      case "Irrigation": {
+        calculateIrrigationEmission({
+          motorCapacity: input?.motorCapacityInHP ?? 0,
+          duration: input?.durationToday ?? 0,
+          energySource: input?.energySource ?? "",
+        });
+        break;
+      }
+      case "Harvesting": {
+        calculateHarvestingEmission({
+          areaCovered: input?.areaCovered,
+          areaCoveredUnit: input?.areaCoveredUnit,
+          isOwner: input?.tractorOwnership === "Own",
+        });
+        break;
+      }
       default:
         break;
     }
+
+    const crop = await Crop.findById(input?.cropId);
+    if (!crop) throw new Error(`No crop found with the id ${input?.cropId}`);
+
+    if (
+      operationMaster?.label === "Harvesting" &&
+      crop?.cropStatus !== "Harvested"
+    )
+      crop.cropStatus = "Harvested";
+
+    if (crop?.type === CropType.PREVIOUS && crop?.cropStatus === "Harvested")
+      crop.cropStatus = "Active";
 
     const operation = await Operations.create(input);
     return operation.toJSON() as unknown as TOperations;

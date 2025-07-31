@@ -23,6 +23,10 @@ const CropSchema = new Schema<ICropSchema>(
     variety: {
       type: String,
     },
+    cropStatus: {
+      type: String,
+      default: "Active",
+    },
     type: {
       type: String,
       enum: {

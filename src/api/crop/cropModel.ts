@@ -17,6 +17,7 @@ export const CropSchema = z
         message: `Type must be either ${CropType.CURRENT} or ${CropType.PREVIOUS}`,
       }),
     }),
+    cropStatus: z.string().optional(),
     farm: commonValidations.id,
     dateOfSowing: z.string().transform((date) => new Date(date)),
     dateOfHarvest: z

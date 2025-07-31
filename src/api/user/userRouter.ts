@@ -1,5 +1,9 @@
 import express, { type Router } from "express";
-import { GetUserSchema, UpdateUserSchema } from "@/api/user/userModel";
+import {
+  GetUserSchema,
+  GetUsersQuerySchema,
+  UpdateUserSchema,
+} from "@/api/user/userModel";
 import { asyncHandler } from "@/common/middleware/asyncHandler";
 import isAdmin from "@/common/middleware/isAdmin";
 import isProtected from "@/common/middleware/isProtected";
@@ -10,7 +14,12 @@ export const userRouter: Router = express.Router();
 
 userRouter
   .route("/")
-  .get(isProtected, isAdmin, asyncHandler(userController.getUsers))
+  .get(
+    isProtected,
+    isAdmin,
+    validateRequest(GetUsersQuerySchema),
+    asyncHandler(userController.getUsers)
+  )
   .put(
     isProtected,
     isAdmin,
