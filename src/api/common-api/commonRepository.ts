@@ -1,6 +1,7 @@
 import Emission from "@/common/db/models/emission";
 import EmissionFactor from "@/common/db/models/emission-factor";
-import type { IEmission } from "@/common/utils/type";
+import { TGetAllEmissionsQuery } from "./commonModel";
+import { PipelineStage } from "mongoose";
 
 export class CommonRepository {
   async initializeEmissionFactors() {
@@ -50,8 +51,14 @@ export class CommonRepository {
     }
   }
 
-  async getAllEmissionsAsync() {
-    const data = await Emission.find({});
-    return JSON.parse(JSON.stringify(data)) as IEmission[];
+  async getAllEmissionsAsync({ category }: TGetAllEmissionsQuery) {
+    const match: PipelineStage.Match["$match"] = {};
+    if (category) {
+      match.category = category;
+    }
+
+    const pipelines: PipelineStage[] = [{ $match: match }];
+
+    return await Emission.aggregate(pipelines);
   }
 }

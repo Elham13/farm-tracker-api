@@ -25,10 +25,10 @@ class CommonController {
   };
 
   public getAllEmission: RequestHandler = async (
-    _req: EnhancedRequest,
+    req: EnhancedRequest,
     res: Response
   ) => {
-    const data = await this.commonRepository.getAllEmissionsAsync();
+    const data = await this.commonRepository.getAllEmissionsAsync(req.query);
     const serviceResponse = ServiceResponse.success<IEmission[]>(
       "Fetched",
       data,
