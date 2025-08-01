@@ -5,6 +5,7 @@ import type { EnhancedRequest } from "@/common/utils/type";
 import type { IDashboardCount } from "./dashboardModel";
 import { DashboardRepository } from "./dashboardRepository";
 import { TOperations } from "../operations/operationsModel";
+import { TCrop } from "../crop/cropModel";
 
 class DashboardController {
   private readonly dashboardRepository: DashboardRepository;
@@ -32,6 +33,19 @@ class DashboardController {
   ) => {
     const data = await this.dashboardRepository.getAllOperations();
     const serviceResponse = ServiceResponse.success<TOperations[]>(
+      "Fetched",
+      data,
+      StatusCodes.OK
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public getAllCrops: RequestHandler = async (
+    _req: EnhancedRequest,
+    res: Response
+  ) => {
+    const data = await this.dashboardRepository.getAllCrops();
+    const serviceResponse = ServiceResponse.success<TCrop[]>(
       "Fetched",
       data,
       StatusCodes.OK

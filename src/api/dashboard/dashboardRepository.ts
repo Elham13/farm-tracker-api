@@ -5,6 +5,7 @@ import type { IDashboardCount } from "./dashboardModel";
 import Operations from "@/common/db/models/operations";
 import { TOperations } from "../operations/operationsModel";
 import { PipelineStage } from "mongoose";
+import { TCrop } from "../crop/cropModel";
 
 export class DashboardRepository {
   async getDashboardCountsAsync(): Promise<IDashboardCount> {
@@ -57,5 +58,10 @@ export class DashboardRepository {
       },
     ];
     return await Operations.aggregate(pipelines);
+  }
+
+  async getAllCrops(): Promise<TCrop[]> {
+    const pipelines: PipelineStage[] = [{ $match: {} }];
+    return await Crop.aggregate(pipelines);
   }
 }

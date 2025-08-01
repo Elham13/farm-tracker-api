@@ -12,3 +12,7 @@ dashboardRouter
 dashboardRouter
   .route("/get-all-operations")
   .get(isProtected, isAdmin, dashboardController.getAllOperations);
+
+dashboardRouter
+  .route("/get-all-crops")
+  .get(isProtected, isAdmin, dashboardController.getAllCrops);
