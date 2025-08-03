@@ -6,10 +6,11 @@ interface ITillingArgs {
   areaCovered: number;
   isOwner: boolean;
   areaCoveredUnit: string;
+  cropId: string;
 }
 
 export const calculateTillingEmissions = async (args: ITillingArgs) => {
-  const { areaCoveredUnit, areaCovered, isOwner } = args;
+  const { areaCoveredUnit, areaCovered, isOwner, cropId } = args;
   const factors = await EmissionFactor.findOne();
   if (!factors) throw new Error("Emission factors not found");
 
@@ -24,6 +25,7 @@ export const calculateTillingEmissions = async (args: ITillingArgs) => {
   const payload: IEmission = {
     operation: "Tilling",
     emission,
+    cropId,
     scope,
     category: "GHG",
     categoryUnit: "kgCO2e",
@@ -37,7 +39,7 @@ export const calculateTillingEmissions = async (args: ITillingArgs) => {
 type TSowingArgs = ITillingArgs & { mode: string };
 
 export const calculateSowingEmission = async (args: TSowingArgs) => {
-  const { areaCovered, mode, isOwner, areaCoveredUnit } = args;
+  const { areaCovered, mode, isOwner, areaCoveredUnit, cropId } = args;
   const operation = "Sowing";
   const factors = await EmissionFactor.findOne();
   if (!factors) {
@@ -57,6 +59,7 @@ export const calculateSowingEmission = async (args: TSowingArgs) => {
     const payload: IEmission = {
       operation: `${operation} ${mode}`,
       emission,
+      cropId,
       scope,
       category: "GHG",
       categoryUnit: "kgCO2e",
@@ -78,6 +81,7 @@ export const calculateSowingEmission = async (args: TSowingArgs) => {
       operation: `${operation} ${mode}`,
       emission,
       scope,
+      cropId,
       category: "GHG",
       categoryUnit: "kgCO2e",
       unit: `kgCO2e/${areaCoveredUnit}`,
@@ -90,6 +94,7 @@ export const calculateSowingEmission = async (args: TSowingArgs) => {
       electricityConsumption: electricityConsumed,
       category: "Electricity",
       categoryUnit: "kWh",
+      cropId,
       unit: `kWh/${areaCoveredUnit}`,
       calculation: `${areaCovered} acres × ${factors.dronePowerConsumption} kWh/acre = ${electricityConsumed} kWh`,
     });
@@ -117,6 +122,7 @@ export const calculateFertilizerEmission = async (args: IFertilizerArgs) => {
     areaCovered,
     areaCoveredUnit,
     isOwner,
+    cropId,
   } = args;
   const factors = await EmissionFactor.findOne();
   if (!factors) throw new Error("Emission Factors not found");
@@ -137,6 +143,7 @@ export const calculateFertilizerEmission = async (args: IFertilizerArgs) => {
     scope: "Scope 3",
     category: "GHG",
     categoryUnit: "kgCO2e",
+    cropId,
     unit: `kgCO2e/${quantityUnit} (${fertilizerType})`,
     calculation: `${quantityToday} ${fertilizerType} × ${emissionFactor} kgCO2e/${quantityUnit} = ${emission} kgCO2e`,
   };
@@ -147,6 +154,7 @@ export const calculateFertilizerEmission = async (args: IFertilizerArgs) => {
     waterConsumption: waterInKiloLiters,
     category: "Water",
     categoryUnit: "kL",
+    cropId,
     unit: `kL`,
     calculation: `${waterConsumed} (liters) / 1000 = ${waterInKiloLiters} kL`,
   });
@@ -164,6 +172,7 @@ export const calculateFertilizerEmission = async (args: IFertilizerArgs) => {
       emission: tractorEmission,
       scope: tractorScope,
       category: "GHG",
+      cropId,
       categoryUnit: "kgCO2e",
       unit: `kgCO2e/${areaCoveredUnit}`,
       calculation: `${areaCovered} ${areaCoveredUnit} × ${tractorEmissionFactor} kgCO2e/${areaCoveredUnit} (tractor) = ${tractorEmission} kgCO2e`,
@@ -180,6 +189,7 @@ export const calculateFertilizerEmission = async (args: IFertilizerArgs) => {
       scope: droneScope,
       electricityConsumption: electricityConsumed,
       category: "GHG",
+      cropId,
       categoryUnit: "kgCO2e",
       unit: `kgCO2e/${areaCoveredUnit}`,
       calculation: `${electricityConsumed} kWh × ${factors.gridPowerEmFct} kgCO2e/kWh = ${droneEmission} kgCO2e`,
@@ -193,6 +203,7 @@ export const calculateFertilizerEmission = async (args: IFertilizerArgs) => {
       category: "Electricity",
       categoryUnit: "kWh",
       unit: `kWh/${areaCoveredUnit}`,
+      cropId,
       calculation: `${areaCovered} acres × ${factors.dronePowerConsumption} kWh/acre = ${electricityConsumed} kWh`,
     };
     await Emission.create(droneElectricityPayload);
@@ -217,6 +228,7 @@ export const calculatePesticideEmission = async (args: IPesticideArgs) => {
     areaCovered,
     areaCoveredUnit,
     isOwner,
+    cropId,
   } = args;
   const factors = await EmissionFactor.findOne();
   if (!factors) throw new Error("Emission Factors not found");
@@ -238,6 +250,7 @@ export const calculatePesticideEmission = async (args: IPesticideArgs) => {
     scope: "Scope 3",
     category: "GHG",
     categoryUnit: "kgCO2e",
+    cropId,
     unit: `kgCO2e/${quantityUnit} (${fertilizerType})`,
     calculation: `${quantityToday} ${fertilizerType} × ${emissionFactor} kgCO2e/${quantityUnit} = ${emission} kgCO2e`,
   };
@@ -249,6 +262,7 @@ export const calculatePesticideEmission = async (args: IPesticideArgs) => {
     waterConsumption: waterInKiloLiters,
     category: "Water",
     categoryUnit: "kL",
+    cropId,
     unit: `kL`,
     calculation: `${waterConsumed} (liters) / 1000 = ${waterInKiloLiters} kL`,
   });
@@ -267,6 +281,7 @@ export const calculatePesticideEmission = async (args: IPesticideArgs) => {
       emission: tractorEmission,
       scope: tractorScope,
       category: "GHG",
+      cropId,
       categoryUnit: "kgCO2e",
       unit: `kgCO2e/${areaCoveredUnit}`,
       calculation: `${areaCovered} ${areaCoveredUnit} × ${tractorEmissionFactor} kgCO2e/${areaCoveredUnit} (tractor) = ${tractorEmission} kgCO2e`,
@@ -283,6 +298,7 @@ export const calculatePesticideEmission = async (args: IPesticideArgs) => {
     await Emission.create({
       operation: `${operation} ${mode}`,
       emission: droneEmission,
+      cropId,
       scope: droneScope,
       electricityConsumption: electricityConsumed,
       category: "GHG",
@@ -295,6 +311,7 @@ export const calculatePesticideEmission = async (args: IPesticideArgs) => {
     await Emission.create({
       operation: `${operation} ${mode} Electricity`,
       electricityConsumption: electricityConsumed,
+      cropId,
       category: "Electricity",
       categoryUnit: "kWh",
       unit: `kWh/${areaCoveredUnit}`,
@@ -307,10 +324,11 @@ interface IIrrigationArgs {
   motorCapacity: number; // in HP
   duration: number; // in hours
   energySource: string; // "Diesel" | "Grid" | "Solar"
+  cropId: string;
 }
 
 export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
-  const { motorCapacity, duration, energySource } = args;
+  const { motorCapacity, duration, energySource, cropId } = args;
   const factors = await EmissionFactor.findOne();
   if (!factors) throw new Error("Emission Factors not found");
 
@@ -329,6 +347,7 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
     operation: `${operation} Water`,
     waterConsumption: waterInKiloLiters,
     category: "Water",
+    cropId,
     categoryUnit: "kL",
     unit: "kL",
     calculation: `${motorCapacity} HP × ${duration} hours × ${factors.waterPerHPPerHour} liters/HP/hour = ${waterConsumed} liters (${waterInKiloLiters} kL)`,
@@ -339,8 +358,10 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
     operation: `${operation} Electricity`,
     electricityConsumption: electricityConsumed,
     category: "Electricity",
+    cropId,
     categoryUnit: "kWh",
     unit: "kWh",
+    energySource,
     calculation: `${motorCapacity} HP × ${duration} hours × ${factors.energyPerHPPerHour} kWh/HP/hour = ${electricityConsumed} kWh`,
   });
 
@@ -354,9 +375,11 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
     await Emission.create({
       operation: `${operation} Diesel Consumption`,
       dieselConsumption: dieselConsumed,
+      cropId,
       category: "Diesel",
       categoryUnit: "liters",
       unit: "liters",
+      energySource,
       calculation: `${motorCapacity} HP × ${duration} hours × ${factors.dieselPerHPPerHour} liters/HP/hour = ${dieselConsumed} liters`,
     });
 
@@ -365,12 +388,14 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
       operation: `${operation} Diesel`,
       emission,
       scope: "Scope 1",
+      cropId,
       category: "GHG",
       categoryUnit: "kgCO2e",
       unit: "kgCO2e",
+      energySource,
       calculation: `${dieselConsumed} liters × ${factors.dieselEmFctEnergy} kgCO2e/liter = ${emission} kgCO2e`,
     });
-  } else if (energySource === "Grid") {
+  } else if (energySource === "Grid power") {
     const emission = electricityConsumed * factors.gridPowerEmFct;
 
     // Grid emissions record (Scope 2)
@@ -378,7 +403,9 @@ export const calculateIrrigationEmission = async (args: IIrrigationArgs) => {
       operation: `${operation} Grid`,
       emission,
       scope: "Scope 2",
+      energySource,
       category: "GHG",
+      cropId,
       categoryUnit: "kgCO2e",
       unit: "kgCO2e",
       calculation: `${electricityConsumed} kWh × ${factors.gridPowerEmFct} kgCO2e/kWh = ${emission} kgCO2e`,
@@ -392,7 +419,7 @@ interface IHarvestingArgs extends ITillingArgs {
 }
 
 export const calculateHarvestingEmission = async (args: IHarvestingArgs) => {
-  const { areaCovered, areaCoveredUnit, isOwner } = args;
+  const { areaCovered, areaCoveredUnit, isOwner, cropId } = args;
   const factors = await EmissionFactor.findOne();
   if (!factors) throw new Error("Emission Factors not found");
 
@@ -411,6 +438,7 @@ export const calculateHarvestingEmission = async (args: IHarvestingArgs) => {
     emission,
     scope,
     category: "GHG",
+    cropId,
     categoryUnit: "kgCO2e",
     unit: `kgCO2e/${areaCoveredUnit}`,
     calculation: `${areaCovered} ${areaCoveredUnit} × ${emissionFactor} kgCO2e/${areaCoveredUnit} = ${emission} kgCO2e`,

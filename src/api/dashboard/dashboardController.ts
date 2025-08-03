@@ -2,10 +2,16 @@ import type { RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import type { EnhancedRequest } from "@/common/utils/type";
-import type { IDashboardCount } from "./dashboardModel";
+import type { TCrop } from "../crop/cropModel";
+import type { TOperations } from "../operations/operationsModel";
+import type {
+  IAggregatedMetrics,
+  ICropWiseEmission,
+  IDashboardCount,
+  IFarmer,
+  TGetFarmersInput,
+} from "./dashboardModel";
 import { DashboardRepository } from "./dashboardRepository";
-import { TOperations } from "../operations/operationsModel";
-import { TCrop } from "../crop/cropModel";
 
 class DashboardController {
   private readonly dashboardRepository: DashboardRepository;
@@ -46,6 +52,46 @@ class DashboardController {
   ) => {
     const data = await this.dashboardRepository.getAllCrops();
     const serviceResponse = ServiceResponse.success<TCrop[]>(
+      "Fetched",
+      data,
+      StatusCodes.OK
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public getAggregatedMetrics: RequestHandler = async (
+    _req: EnhancedRequest,
+    res: Response
+  ) => {
+    const data = await this.dashboardRepository.getAggregatedMetricsAsync();
+    const serviceResponse = ServiceResponse.success<IAggregatedMetrics>(
+      "Fetched",
+      data,
+      StatusCodes.OK
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public getCropWiseEmissions: RequestHandler = async (
+    _req: EnhancedRequest,
+    res: Response
+  ) => {
+    const data = await this.dashboardRepository.getCropWiseEmissionsAsync();
+    const serviceResponse = ServiceResponse.success<ICropWiseEmission[]>(
+      "Fetched",
+      data,
+      StatusCodes.OK
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public getFarmersData: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response
+  ) => {
+    const query = req.query as TGetFarmersInput;
+    const data = await this.dashboardRepository.getFarmersDataAsync(query);
+    const serviceResponse = ServiceResponse.success<IFarmer[]>(
       "Fetched",
       data,
       StatusCodes.OK

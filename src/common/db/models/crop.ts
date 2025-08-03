@@ -8,9 +8,9 @@ import mongoose, {
 import type { TCrop } from "@/api/crop/cropModel";
 import { CropType } from "@/common/utils/constants/enums";
 
-interface ICropSchema extends Document, Omit<TCrop, "_id" | "user" | "farm"> {
+interface ICropSchema extends Document, Omit<TCrop, "_id" | "userId" | "farm"> {
   _id: ObjectId;
-  user: ObjectId;
+  userId: ObjectId;
   farm: ObjectId;
 }
 
@@ -49,6 +49,11 @@ const CropSchema = new Schema<ICropSchema>(
     farm: {
       type: Types.ObjectId,
       ref: "Farm",
+      required: true,
+    },
+    userId: {
+      type: Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },

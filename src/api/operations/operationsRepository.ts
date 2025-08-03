@@ -75,12 +75,16 @@ export class OperationsRepository {
         `No operation found with the id ${input?.operationMaster}`
       );
 
+    const crop = await Crop.findById(input?.cropId);
+    if (!crop) throw new Error(`No crop found with the id ${input?.cropId}`);
+
     switch (operationMaster?.label) {
       case "Tilling": {
         calculateTillingEmissions({
           areaCovered: input?.areaCovered,
           areaCoveredUnit: input?.areaCoveredUnit,
           isOwner: input?.tractorOwnership === "Own",
+          cropId: input?.cropId,
         });
         break;
       }
@@ -90,6 +94,7 @@ export class OperationsRepository {
           areaCoveredUnit: input?.areaCoveredUnit,
           isOwner: input?.tractorOwnership === "Own",
           mode: input?.mode,
+          cropId: input?.cropId,
         });
         break;
       }
@@ -103,6 +108,7 @@ export class OperationsRepository {
           quantityToday: input?.quantityToday ?? 0,
           quantityUnit: input?.quantityUnit ?? "",
           waterConsumed: input?.waterConsumed ?? 0,
+          cropId: input?.cropId,
         });
         break;
       }
@@ -116,6 +122,7 @@ export class OperationsRepository {
           quantityToday: input?.quantityToday ?? 0,
           quantityUnit: input?.quantityUnit ?? "",
           waterConsumed: input?.waterConsumed ?? 0,
+          cropId: input?.cropId,
         });
         break;
       }
@@ -124,6 +131,7 @@ export class OperationsRepository {
           motorCapacity: input?.motorCapacityInHP ?? 0,
           duration: input?.durationToday ?? 0,
           energySource: input?.energySource ?? "",
+          cropId: input?.cropId,
         });
         break;
       }
@@ -132,15 +140,13 @@ export class OperationsRepository {
           areaCovered: input?.areaCovered,
           areaCoveredUnit: input?.areaCoveredUnit,
           isOwner: input?.tractorOwnership === "Own",
+          cropId: input?.cropId,
         });
         break;
       }
       default:
         break;
     }
-
-    const crop = await Crop.findById(input?.cropId);
-    if (!crop) throw new Error(`No crop found with the id ${input?.cropId}`);
 
     if (
       operationMaster?.label === "Harvesting" &&

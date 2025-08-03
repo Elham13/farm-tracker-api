@@ -1,11 +1,22 @@
-import { type Document, type Model, model, models, Schema } from "mongoose";
+import {
+  type Document,
+  type Model,
+  model,
+  models,
+  type ObjectId,
+  Schema,
+  Types,
+} from "mongoose";
 import type { IEmission } from "@/common/utils/type";
 
-type TEmissionSchema = IEmission & Document;
+interface IEmissionSchema extends Document, Omit<IEmission, "cropId"> {
+  cropId: ObjectId;
+}
 
-const EmissionSchema = new Schema<TEmissionSchema>(
+const EmissionSchema = new Schema<IEmissionSchema>(
   {
     operation: { type: String, required: true },
+    cropId: { type: Types.ObjectId, ref: "Crop", required: true },
     emission: { type: Number },
     scope: { type: String },
     unit: { type: String, required: true },
@@ -15,13 +26,14 @@ const EmissionSchema = new Schema<TEmissionSchema>(
     electricityConsumption: { type: Number },
     waterConsumption: { type: Number },
     dieselConsumption: { type: Number },
+    energySource: { type: String },
   },
   {
     timestamps: true,
   }
 );
 
-const Emission: Model<TEmissionSchema> =
-  models.Emission || model<TEmissionSchema>("Emission", EmissionSchema);
+const Emission: Model<IEmissionSchema> =
+  models.Emission || model<IEmissionSchema>("Emission", EmissionSchema);
 
 export default Emission;

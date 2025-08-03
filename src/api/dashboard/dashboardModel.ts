@@ -1,3 +1,6 @@
+import z from "zod";
+import { FarmersUsing } from "@/common/utils/constants/enums";
+
 export interface IDashboardCount {
   farmers: number;
   admins: number;
@@ -5,3 +8,41 @@ export interface IDashboardCount {
   crops: number;
   operations: number;
 }
+
+export interface IAggregatedMetrics {
+  renewableEnergy: number;
+  nonRenewableEnergy: number;
+  totalEmissions: number;
+  totalWater: number;
+}
+
+export interface ICropWiseEmission {
+  crop: string;
+  total: number;
+  scope1: number;
+  scope2: number;
+  scope3: number;
+}
+
+export interface IUsingData {
+  currentCrop: string;
+  using: boolean;
+}
+
+export interface IFarmer {
+  _id: string;
+  name: string;
+  data: IUsingData[];
+}
+
+export const GetFarmersData = z.object({
+  query: z.object({
+    using: z.nativeEnum(FarmersUsing, {
+      errorMap: () => ({
+        message: "Invalid query using value",
+      }),
+    }),
+  }),
+});
+
+export type TGetFarmersInput = z.infer<typeof GetFarmersData.shape.query>;

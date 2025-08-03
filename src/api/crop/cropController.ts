@@ -24,7 +24,7 @@ class CropController {
 
     const crop = await this.cropRepository.addCropAsync({
       ...req.body,
-      user: userId,
+      userId,
     });
     const serviceResponse = ServiceResponse.success<TCrop>(
       "Created",

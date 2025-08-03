@@ -15,8 +15,10 @@ export interface EnhancedRequest extends Request {
 
 export interface IEmission {
   operation: string;
+  cropId: string;
   emission?: number;
   scope?: string;
+  energySource?: string;
   unit: string;
   calculation: string;
   category: string;
