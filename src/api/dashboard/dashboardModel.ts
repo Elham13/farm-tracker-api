@@ -35,6 +35,11 @@ export interface IFarmer {
   data: IUsingData[];
 }
 
+export interface IFarmersRes {
+  content: IFarmer[];
+  total: number;
+}
+
 export const GetFarmersData = z.object({
   query: z.object({
     using: z.nativeEnum(FarmersUsing, {
@@ -46,3 +51,8 @@ export const GetFarmersData = z.object({
 });
 
 export type TGetFarmersInput = z.infer<typeof GetFarmersData.shape.query>;
+
+export interface ICropWiseWater {
+  cropName: string;
+  totalWaterInLiter: number;
+}

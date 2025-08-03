@@ -7,8 +7,10 @@ import type { TOperations } from "../operations/operationsModel";
 import type {
   IAggregatedMetrics,
   ICropWiseEmission,
+  ICropWiseWater,
   IDashboardCount,
   IFarmer,
+  IFarmersRes,
   TGetFarmersInput,
 } from "./dashboardModel";
 import { DashboardRepository } from "./dashboardRepository";
@@ -91,7 +93,21 @@ class DashboardController {
   ) => {
     const query = req.query as TGetFarmersInput;
     const data = await this.dashboardRepository.getFarmersDataAsync(query);
-    const serviceResponse = ServiceResponse.success<IFarmer[]>(
+    const serviceResponse = ServiceResponse.success<IFarmersRes>(
+      "Fetched",
+      data,
+      StatusCodes.OK
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public getCropWiseWaterConsumption: RequestHandler = async (
+    _req: EnhancedRequest,
+    res: Response
+  ) => {
+    const data =
+      await this.dashboardRepository.getCropWiseWaterConsumptionAsync();
+    const serviceResponse = ServiceResponse.success<ICropWiseWater[]>(
       "Fetched",
       data,
       StatusCodes.OK

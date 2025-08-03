@@ -35,3 +35,6 @@ dashboardRouter
     validateRequest(GetFarmersData),
     dashboardController.getFarmersData
   );
+dashboardRouter
+  .route("/get-crop-wise-water-consumption")
+  .get(isProtected, isAdmin, dashboardController.getCropWiseWaterConsumption);

@@ -10,8 +10,10 @@ import type { TOperations } from "../operations/operationsModel";
 import type {
   IAggregatedMetrics,
   ICropWiseEmission,
+  ICropWiseWater,
   IDashboardCount,
   IFarmer,
+  IFarmersRes,
   IUsingData,
   TGetFarmersInput,
 } from "./dashboardModel";
@@ -138,11 +140,34 @@ export class DashboardRepository {
     return cropEmissions;
   }
 
-  async getFarmersDataAsync({ using }: TGetFarmersInput): Promise<IFarmer[]> {
-    const farmers = await User.find({ role: Role.FARMER }).lean();
+  async getCropWiseWaterConsumptionAsync(): Promise<ICropWiseWater[]> {
+    const crops = await Crop.find().lean();
+    const cropEmissions: ICropWiseWater[] = [];
+    for (const crop of crops) {
+      const emissions = await Emission.find({ cropId: crop?._id }).lean();
+      if (!emissions || emissions?.length < 1) break;
+
+      const totalWaterInLiter = emissions.reduce(
+        (sum, e) => sum + (e.waterConsumption || 0),
+        0
+      );
+
+      const obj: ICropWiseWater = {
+        cropName: crop?.name,
+        totalWaterInLiter: Number(totalWaterInLiter.toFixed(2)),
+      };
+      cropEmissions.push(obj);
+    }
+
+    return cropEmissions;
+  }
+
+  async getFarmersDataAsync({ using }: TGetFarmersInput): Promise<IFarmersRes> {
+    const query = { role: Role.FARMER };
+    const farmers = await User.find(query).lean();
 
     const farmersData: IFarmer[] = [];
-    if (!farmers || farmers?.length < 1) return [];
+    if (!farmers || farmers?.length < 1) return { content: [], total: 0 };
     for (const farmer of farmers) {
       const crops = await Crop.find({ userId: farmer?._id });
       const data: IUsingData[] = [];
@@ -207,6 +232,8 @@ export class DashboardRepository {
       farmersData.push(obj);
     }
 
-    return farmersData;
+    const total = await User.countDocuments(query);
+
+    return { content: farmersData, total };
   }
 }
