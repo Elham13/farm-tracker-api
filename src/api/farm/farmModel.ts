@@ -49,6 +49,10 @@ export const AddFarmBodySchema = z.object({
   }),
 });
 
+export const GetFarmsSchema = z.object({
+  query: z.object({ getAll: z.string().optional() }),
+});
+
 export const GetFarmByIdSchema = z.object({
   params: z.object({ id: commonValidations.id }),
 });
@@ -62,5 +66,6 @@ export const UpdateFarmBodySchema = z.object({
 });
 
 export type TFarm = z.infer<typeof FarmSchema>;
+export type TGetFarmsInput = z.infer<typeof GetFarmsSchema.shape.query>;
 export type TAddFarm = z.infer<typeof AddFarmSchema>;
 export type TUpdateFarmInput = z.infer<typeof UpdateFarmSchema>;

@@ -5,6 +5,7 @@ import { farmController } from "./farmController";
 import {
   AddFarmBodySchema,
   GetFarmByIdSchema,
+  GetFarmsSchema,
   UpdateFarmBodySchema,
 } from "./farmModel";
 
@@ -12,7 +13,7 @@ export const farmRouter: Router = express.Router();
 
 farmRouter
   .route("/")
-  .get(isProtected, farmController.getFarms)
+  .get(isProtected, validateRequest(GetFarmsSchema), farmController.getFarms)
   .post(isProtected, validateRequest(AddFarmBodySchema), farmController.addFarm)
   .put(
     isProtected,

@@ -5,6 +5,7 @@ import {
   AddFarmSchema,
   FarmSchema,
   GetFarmByIdSchema,
+  GetFarmsSchema,
   UpdateFarmSchema,
 } from "./farmModel";
 
@@ -16,6 +17,9 @@ farmRegistry.registerPath({
   method: "get",
   path: "/farms",
   tags: ["Farm"],
+  request: {
+    query: GetFarmsSchema.shape.query,
+  },
   responses: createApiResponse(z.array(FarmSchema), "Success"),
 });
 farmRegistry.registerPath({

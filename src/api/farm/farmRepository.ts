@@ -5,8 +5,10 @@ import { CropRepository } from "../crop/cropRepository";
 import type { TAddFarm, TFarm, TUpdateFarmInput } from "./farmModel";
 
 export class FarmRepository {
-  async getFarmsAsync(userId: string): Promise<TFarm[]> {
-    const farms: TFarm[] = await Farm.find({ user: userId });
+  async getFarmsAsync(userId: string, getAll: boolean): Promise<TFarm[]> {
+    const query: Record<string, string> = {};
+    if (!getAll) query.user = userId;
+    const farms: TFarm[] = await Farm.find(query);
     return farms;
   }
 

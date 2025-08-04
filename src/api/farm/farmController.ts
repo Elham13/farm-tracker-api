@@ -43,7 +43,9 @@ class FarmController {
     if (!userId)
       return next(new ErrorHandler("No user found!", StatusCodes.UNAUTHORIZED));
 
-    const farms = await this.farmRepository.getFarmsAsync(userId);
+    const getAll = req.query.getAll === "true";
+
+    const farms = await this.farmRepository.getFarmsAsync(userId, getAll);
     const serviceResponse = ServiceResponse.success<TFarm[]>("Fetched", farms);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
