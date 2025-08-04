@@ -24,15 +24,11 @@ export interface ICropWiseEmission {
   scope3: number;
 }
 
-export interface IUsingData {
-  currentCrop: string;
-  using: boolean;
-}
-
 export interface IFarmer {
   _id: string;
   name: string;
-  data: IUsingData[];
+  currentCrop: string;
+  using: boolean;
 }
 
 export interface IFarmersRes {

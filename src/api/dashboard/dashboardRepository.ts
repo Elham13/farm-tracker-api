@@ -4,7 +4,7 @@ import Emission from "@/common/db/models/emission";
 import Farm from "@/common/db/models/farm";
 import Operations from "@/common/db/models/operations";
 import User from "@/common/db/models/user";
-import { FarmersUsing, Role } from "@/common/utils/constants/enums";
+import { FarmersUsing } from "@/common/utils/constants/enums";
 import type { TCrop } from "../crop/cropModel";
 import type { TOperations } from "../operations/operationsModel";
 import type {
@@ -14,7 +14,6 @@ import type {
   IDashboardCount,
   IFarmer,
   IFarmersRes,
-  IUsingData,
   TGetFarmersInput,
 } from "./dashboardModel";
 
@@ -163,76 +162,54 @@ export class DashboardRepository {
   }
 
   async getFarmersDataAsync({ using }: TGetFarmersInput): Promise<IFarmersRes> {
-    const query = { role: Role.FARMER };
-    const farmers = await User.find(query).lean();
+    const query = { type: "Current" };
+    const crops = await Crop.find(query).lean();
 
     const farmersData: IFarmer[] = [];
-    if (!farmers || farmers?.length < 1) return { content: [], total: 0 };
-    for (const farmer of farmers) {
-      const crops = await Crop.find({ userId: farmer?._id });
-      const data: IUsingData[] = [];
 
-      if (!!crops && crops?.length > 0) {
-        switch (using) {
-          case FarmersUsing.ELIGIBLE_GREEN_CRED:
-          case FarmersUsing.OPTED_FOR_CERT: {
-            for (const crop of crops) {
-              data.push({
-                currentCrop: crop?.name,
-                using: Math.random() > 0.5,
-              });
-            }
-            break;
-          }
-          case FarmersUsing.NATURAL_FERTILIZER: {
-            let usesNaturalFertilizer = false;
-            for (const crop of crops) {
-              const operations = await Operations.find({ cropId: crop?._id });
-              const foundOrganic = operations.find(
-                (el) => el?.fertilizerType === "Organic"
-              );
-              if (foundOrganic) usesNaturalFertilizer = true;
+    for (const crop of crops) {
+      const farmer = await User.findOne({ _id: crop?.userId });
 
-              data.push({
-                currentCrop: crop?.name,
-                using: usesNaturalFertilizer,
-              });
-              usesNaturalFertilizer = false;
-            }
-            break;
-          }
-          case FarmersUsing.SOLAR_WATER: {
-            let usesSolarForIrrigation = false;
-            for (const crop of crops) {
-              const operations = await Operations.find({ cropId: crop?._id });
-              const foundSolar = operations.find(
-                (el) => el?.energySource === "Solar power"
-              );
-              if (foundSolar) usesSolarForIrrigation = true;
+      let isUsing = false;
 
-              data.push({
-                currentCrop: crop?.name,
-                using: usesSolarForIrrigation,
-              });
-              usesSolarForIrrigation = false;
-            }
-            break;
-          }
-          default:
-            break;
+      switch (using) {
+        case FarmersUsing.ELIGIBLE_GREEN_CRED:
+        case FarmersUsing.OPTED_FOR_CERT: {
+          isUsing = Math.random() > 0.5;
+          break;
         }
+        case FarmersUsing.NATURAL_FERTILIZER: {
+          const operations = await Operations.find({ cropId: crop?._id });
+          const foundOrganic = operations.find(
+            (el) => el?.fertilizerType === "Organic"
+          );
+          if (foundOrganic) isUsing = true;
+          break;
+        }
+        case FarmersUsing.SOLAR_WATER: {
+          const operations = await Operations.find({ cropId: crop?._id });
+          const foundSolar = operations.find(
+            (el) => el?.energySource === "Solar power"
+          );
+          if (foundSolar) isUsing = true;
+
+          break;
+        }
+        default:
+          break;
       }
 
-      const obj: IFarmer = {
-        _id: farmer?._id as unknown as string,
-        name: farmer?.name,
-        data,
+      const tempData: IFarmer = {
+        _id: JSON.stringify(crop?._id),
+        name: farmer?.name || "",
+        currentCrop: crop?.name,
+        using: isUsing,
       };
 
-      farmersData.push(obj);
+      farmersData.push(tempData);
     }
 
-    const total = await User.countDocuments(query);
+    const total = await Crop.countDocuments(query);
 
     return { content: farmersData, total };
   }
