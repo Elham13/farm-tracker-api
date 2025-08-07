@@ -55,7 +55,12 @@ export const AddOperationsSchema = OperationsSchema.omit({
   _id: true,
   createdAt: true,
   updatedAt: true,
-});
+}).merge(
+  z.object({
+    docUri: z.string().optional(),
+    docName: z.string().optional(),
+  })
+);
 
 export const AddOperationsBodySchema = z.object({
   body: AddOperationsSchema,

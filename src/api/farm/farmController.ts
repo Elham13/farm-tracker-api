@@ -46,6 +46,7 @@ class FarmController {
     const getAll = req.query.getAll === "true";
 
     const farms = await this.farmRepository.getFarmsAsync(userId, getAll);
+
     const serviceResponse = ServiceResponse.success<TFarm[]>("Fetched", farms);
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };

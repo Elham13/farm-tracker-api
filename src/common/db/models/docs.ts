@@ -9,10 +9,11 @@ import type { TDoc } from "@/api/docs/docsModel";
 
 interface IDocsSchema
   extends Document,
-    Omit<TDoc, "_id" | "cropId" | "masterId"> {
+    Omit<TDoc, "_id" | "cropId" | "masterId" | "operationId"> {
   _id: ObjectId;
   cropId: ObjectId;
   masterId: ObjectId;
+  operationId: ObjectId;
 }
 
 const DocsSchema = new Schema<IDocsSchema>(
@@ -25,6 +26,11 @@ const DocsSchema = new Schema<IDocsSchema>(
     masterId: {
       type: Types.ObjectId,
       ref: "OperationsMaster",
+      required: true,
+    },
+    operationId: {
+      type: Types.ObjectId,
+      ref: "Operations",
       required: true,
     },
     docUri: {

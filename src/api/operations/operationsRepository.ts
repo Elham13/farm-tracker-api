@@ -1,8 +1,8 @@
 import { type HydratedDocument, type PipelineStage, Types } from "mongoose";
 import Crop from "@/common/db/models/crop";
+import Docs from "@/common/db/models/docs";
 import Operations from "@/common/db/models/operations";
 import OperationsMaster from "@/common/db/models/operations-master";
-import { CropType } from "@/common/utils/constants/enums";
 import {
   calculateFertilizerEmission,
   calculateHarvestingEmission,
@@ -11,6 +11,7 @@ import {
   calculateSowingEmission,
   calculateTillingEmissions,
 } from "@/common/utils/helpers/emission-helpers";
+import type { TDoc } from "../docs/docsModel";
 import type {
   TAddOperations,
   TGetOperationsByIdInput,
@@ -148,16 +149,20 @@ export class OperationsRepository {
         break;
     }
 
-    if (
-      operationMaster?.label === "Harvesting" &&
-      crop?.cropStatus !== "Harvested"
-    )
-      crop.cropStatus = "Harvested";
-
-    if (crop?.type === CropType.PREVIOUS && crop?.cropStatus === "Harvested")
-      crop.cropStatus = "Active";
-
     const operation = await Operations.create(input);
+
+    if (input?.docUri && input?.docName) {
+      const docPayload: Omit<TDoc, "_id" | "createdAt" | "updatedAt"> = {
+        operationId: operation?._id as unknown as string,
+        cropId: crop?._id as unknown as string,
+        docName: input?.docName,
+        masterId: operationMaster?._id as unknown as string,
+        docUri: input?.docUri,
+      };
+
+      await Docs.create(docPayload);
+    }
+
     return operation.toJSON() as unknown as TOperations;
   }
 
