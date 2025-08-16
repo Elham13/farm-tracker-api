@@ -14,9 +14,11 @@ import {
 import type { TDoc } from "../docs/docsModel";
 import type {
   TAddOperations,
+  TDownloadOpDetailsInput,
   TGetOperationsByIdInput,
   TGetOperationsInput,
   TOperations,
+  TOperationsDetailed,
   TUpdateOperationsInput,
 } from "./operationsModel";
 
@@ -43,11 +45,6 @@ export class OperationsRepository {
         $unwind: {
           path: "$masterObj",
           preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $project: {
-          "masterObj.icon": 0,
         },
       },
     ];
@@ -176,5 +173,49 @@ export class OperationsRepository {
     return await Operations.findByIdAndUpdate(input._id, input, {
       new: true,
     });
+  }
+
+  async downloadOperationDetailsAsync(
+    input: TDownloadOpDetailsInput
+  ): Promise<TOperationsDetailed[]> {
+    const { cropId } = input;
+    const pipelines: PipelineStage[] = [
+      {
+        $match: {
+          cropId: new Types.ObjectId(cropId),
+        },
+      },
+      {
+        $lookup: {
+          from: "operationsmasters",
+          localField: "operationMaster",
+          foreignField: "_id",
+          as: "masterObj",
+        },
+      },
+      {
+        $unwind: {
+          path: "$masterObj",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ];
+
+    const data = (await Operations.aggregate(
+      pipelines
+    )) as TOperationsDetailed[];
+
+    const operations: TOperationsDetailed[] = [];
+
+    for (const item of data) {
+      const doc = await Docs.findOne({ operationId: item?._id });
+      if (doc) {
+        item.docUri = doc?.docUri;
+        item.docName = doc?.docName;
+      }
+      operations.push(item);
+    }
+
+    return operations;
   }
 }

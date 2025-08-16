@@ -4,6 +4,7 @@ import { validateRequest } from "@/common/utils/httpHandlers";
 import { operationsController } from "./operationsController";
 import {
   AddOperationsBodySchema,
+  DownloadOperationDetailsSchema,
   GetOperationsByIdSchema,
   GetOperationsSchema,
   UpdateOperationsBodySchema,
@@ -28,6 +29,13 @@ operationsRouter
     validateRequest(UpdateOperationsBodySchema),
     operationsController.updateOperations
   );
+
+operationsRouter.get(
+  "/download-operations-details",
+  isProtected,
+  validateRequest(DownloadOperationDetailsSchema),
+  operationsController.downloadOperationDetails
+);
 
 operationsRouter
   .route("/:id")

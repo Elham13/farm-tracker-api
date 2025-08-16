@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { ErrorHandler } from "@/common/middleware/errorHandler";
 import { ServiceResponse } from "@/common/models/serviceResponse";
 import type { EnhancedRequest } from "@/common/utils/type";
-import type { TOperations } from "./operationsModel";
+import type { TOperations, TOperationsDetailed } from "./operationsModel";
 import { OperationsRepository } from "./operationsRepository";
 
 class OperationsController {
@@ -99,6 +99,22 @@ class OperationsController {
 
     const serviceResponse = ServiceResponse.success<TOperations>(
       "Updated",
+      data
+    );
+    res.status(serviceResponse.statusCode).send(serviceResponse);
+  };
+
+  public downloadOperationDetails: RequestHandler = async (
+    req: EnhancedRequest,
+    res: Response
+  ) => {
+    const cropId = req.query.cropId as string;
+    const data = await this.operationsRepository.downloadOperationDetailsAsync({
+      cropId,
+    });
+
+    const serviceResponse = ServiceResponse.success<TOperationsDetailed[]>(
+      "Fetched",
       data
     );
     res.status(serviceResponse.statusCode).send(serviceResponse);

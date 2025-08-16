@@ -62,6 +62,13 @@ export const AddOperationsSchema = OperationsSchema.omit({
   })
 );
 
+export const OperationsDetailed = OperationsSchema.merge(
+  z.object({
+    docUri: z.string().optional(),
+    docName: z.string().optional(),
+  })
+);
+
 export const AddOperationsBodySchema = z.object({
   body: AddOperationsSchema,
 });
@@ -73,6 +80,12 @@ export const GetOperationsByIdSchema = z.object({
 export const GetOperationsSchema = z.object({
   query: z.object({
     masterId: commonValidations.id,
+    cropId: commonValidations.id,
+  }),
+});
+
+export const DownloadOperationDetailsSchema = z.object({
+  query: z.object({
     cropId: commonValidations.id,
   }),
 });
@@ -104,6 +117,10 @@ export type TGetOperationsByIdInput = {
   id: string;
 };
 export type TUpdateOperationsInput = z.infer<typeof UpdateOperationsSchema>;
+export type TOperationsDetailed = z.infer<typeof OperationsDetailed>;
 export type TGetOperationsInput = z.infer<
   typeof GetOperationsSchema.shape.query
+>;
+export type TDownloadOpDetailsInput = z.infer<
+  typeof DownloadOperationDetailsSchema.shape.query
 >;
