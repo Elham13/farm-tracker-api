@@ -113,7 +113,7 @@ export class DashboardRepository {
     const cropEmissions: ICropWiseEmission[] = [];
     for (const crop of crops) {
       const emissions = await Emission.find({ cropId: crop?._id }).lean();
-      if (!emissions || emissions?.length < 1) break;
+      if (!emissions || emissions?.length < 1) continue;
 
       const total = emissions.reduce((sum, e) => sum + (e.emission || 0), 0);
       const scope1 = emissions
