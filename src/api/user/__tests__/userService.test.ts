@@ -42,10 +42,10 @@ describe("userService", () => {
 
       // Act
       const result = await userRepositoryInstance.findAllAsync({});
-      const serviceResponse = ServiceResponse.success<TUser[]>(
-        "Fetched",
-        result
-      );
+      const serviceResponse = ServiceResponse.success<{
+        content: Omit<TUser, "password">[];
+        total: number;
+      }>("Fetched", result);
 
       // Assert
       expect(serviceResponse.statusCode).toEqual(StatusCodes.OK);
