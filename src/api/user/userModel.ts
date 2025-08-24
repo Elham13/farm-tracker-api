@@ -42,6 +42,10 @@ export type TUser = z.infer<typeof UserSchema>;
 
 export const GetUsersQuerySchema = z.object({
   role: UserSchema.shape.role.optional(),
+  search: z.string().optional(),
+  sort: z.string().optional(),
+  page: z.string().regex(/^\d+$/, "Page must be numeric").optional(),
+  limit: z.string().regex(/^\d+$/, "Limit must be numeric").optional(),
 });
 
 export type TGetUserQuery = z.infer<typeof GetUsersQuerySchema>;
@@ -78,3 +82,13 @@ export const UpdateUserSchema = z
   });
 
 export type TUpdateUser = z.infer<typeof UpdateUserSchema.shape.body>;
+
+// Pagination response schema
+export const PaginatedUsersResponseSchema = z.object({
+  content: z.array(UserSchema.omit({ password: true })),
+  total: z.number(),
+});
+
+export type TPaginatedUsersResponse = z.infer<
+  typeof PaginatedUsersResponseSchema
+>;

@@ -2,7 +2,7 @@ import type { NextFunction, Request, RequestHandler, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { ErrorHandler } from "@/common/middleware/errorHandler";
 import { ServiceResponse } from "@/common/models/serviceResponse";
-import type { TUser } from "./userModel";
+import type { TPaginatedUsersResponse, TUser } from "./userModel";
 import { UserRepository } from "./userRepository";
 
 class UserController {
@@ -14,7 +14,10 @@ class UserController {
 
   public getUsers: RequestHandler = async (req: Request, res: Response) => {
     const data = await this.userRepository.findAllAsync(req.query);
-    const serviceResponse = ServiceResponse.success<TUser[]>("Fetched", data);
+    const serviceResponse = ServiceResponse.success<TPaginatedUsersResponse>(
+      "Fetched",
+      data
+    );
     res.status(serviceResponse.statusCode).send(serviceResponse);
   };
 

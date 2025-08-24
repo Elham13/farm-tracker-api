@@ -1,0 +1,418 @@
+# Farm Tracker API Test Collection
+
+# Base URL - Update this according to your environment
+@baseUrl = http://localhost:5000/api
+
+# ========================================
+# HEALTH CHECK
+# ========================================
+
+### Health Check
+GET {{baseUrl}}/health-check
+
+# ========================================
+# AUTHENTICATION
+# ========================================
+
+### Register User
+# @name Register
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "phone": "9838838283",
+  "password": "1234",
+  "role": "FARMER"
+}
+
+### Login User
+# @name Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "phone": "9346240703",
+  "password": "1111"
+}
+
+### Refresh Token
+# @name RefreshToken
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{Login.response.body.data.refreshToken}}"
+}
+
+# ========================================
+# USERS
+# ========================================
+
+### Get All Users (Admin Only)
+GET {{baseUrl}}/users
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Users with Search
+GET {{baseUrl}}/users?search=John
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Users with Sorting
+GET {{baseUrl}}/users?sort=[{"id":"name","desc":true}]
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Users with Pagination
+GET {{baseUrl}}/users?page=1&limit=5
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Users with Search, Sort, and Pagination
+GET {{baseUrl}}/users?search=John&sort=[{"id":"name","desc":false}]&page=1&limit=10
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Users with Role Filter and Pagination
+GET {{baseUrl}}/users?role=FARMER&page=2&limit=5
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get User by ID
+GET {{baseUrl}}/users/{{Register.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Update User (Admin Only)
+PUT {{baseUrl}}/users
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "_id": "{{Register.response.body._id}}",
+  "name": "John Updated",
+  "phone": "9838838283",
+  "role": "FARMER"
+}
+
+### Delete User (Admin Only)
+DELETE {{baseUrl}}/users/{{Register.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# FARMS
+# ========================================
+
+### Get All Farms
+GET {{baseUrl}}/farms?getAll=true
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Add Farm
+# @name AddFarm
+POST {{baseUrl}}/farms
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Test Farm",
+  "size": 2,
+  "sizeUnit": "acres",
+  "address": "Delhi",
+  "pinCode": 110014,
+  "geo": {
+    "lat": 28.7041,
+    "long": 77.1025
+  }
+}
+
+### Get Farm by ID
+GET {{baseUrl}}/farms/{{AddFarm.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Update Farm
+PUT {{baseUrl}}/farms
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "_id": "{{AddFarm.response.body._id}}",
+  "name": "Updated Farm",
+  "size": 3,
+  "sizeUnit": "acres",
+  "address": "Mumbai",
+  "pinCode": 400001
+}
+
+### Delete Farm
+DELETE {{baseUrl}}/farms/{{AddFarm.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# CROPS
+# ========================================
+
+### Get Crops by Farm ID
+GET {{baseUrl}}/crops?farmId={{AddFarm.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Add Crop
+# @name AddCrop
+POST {{baseUrl}}/crops
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "name": "Corn",
+  "variety": "Sweet Corn",
+  "areaUnderCultivation": 10,
+  "type": "Current",
+  "cropStatus": "Growing",
+  "farm": "{{AddFarm.response.body._id}}",
+  "dateOfSowing": "2024-01-15T00:00:00Z",
+  "dateOfHarvest": "2024-06-15T00:00:00Z"
+}
+
+### Get Crop by ID
+GET {{baseUrl}}/crops/{{AddCrop.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Update Crop
+PUT {{baseUrl}}/crops
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "_id": "{{AddCrop.response.body._id}}",
+  "name": "Wheat",
+  "variety": "Durum Wheat",
+  "areaUnderCultivation": 15,
+  "type": "Current",
+  "cropStatus": "Harvested"
+}
+
+### Delete Crop
+DELETE {{baseUrl}}/crops/{{AddCrop.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# OPERATIONS MASTER
+# ========================================
+
+### Get All Operations Master
+GET {{baseUrl}}/operations-master
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Add Operations Master
+# @name AddOperationsMaster
+POST {{baseUrl}}/operations-master
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary
+
+------WebKitFormBoundary
+Content-Disposition: form-data; name="label"
+
+Fertilizer Application
+------WebKitFormBoundary
+Content-Disposition: form-data; name="icon"; filename="icon.png"
+Content-Type: image/png
+
+< ./icon.png
+------WebKitFormBoundary--
+
+### Get Operations Master by ID
+GET {{baseUrl}}/operations-master/{{AddOperationsMaster.response.body.data._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Update Operations Master
+PUT {{baseUrl}}/operations-master
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "_id": "{{AddOperationsMaster.response.body.data._id}}",
+  "label": "Updated Fertilizer Application"
+}
+
+### Delete Operations Master
+DELETE {{baseUrl}}/operations-master/{{AddOperationsMaster.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# OPERATIONS
+# ========================================
+
+### Get Operations by Master ID and Crop ID
+GET {{baseUrl}}/operations?masterId={{AddOperationsMaster.response.body.data._id}}&cropId={{AddCrop.response.body.data._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Add Operation
+# @name AddOperation
+POST {{baseUrl}}/operations
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "operationMaster": "{{AddOperationsMaster.response.body.data._id}}",
+  "cropId": "{{AddCrop.response.body.data._id}}",
+  "date": "2024-01-20T00:00:00Z",
+  "name": "NPK Fertilizer",
+  "motorCapacityInHP": 5,
+  "energySource": "Diesel",
+  "areaCovered": 5,
+  "areaCoveredUnit": "acres",
+  "mode": "Chemical",
+  "tractorOwnership": "Owned",
+  "fertilizerType": "NPK",
+  "quantityToday": 2,
+  "quantityUnit": "KG",
+  "durationToday": 4,
+  "durationTodayUnit": "hr",
+  "waterConsumed": 100,
+  "waterConsumedUnit": "liters",
+  "description": "Applied NPK fertilizer to corn field"
+}
+
+### Get Operation by ID
+GET {{baseUrl}}/operations/{{AddOperation.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Update Operation
+PUT {{baseUrl}}/operations
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "_id": "{{AddOperation.response.body.data._id}}",
+  "name": "Updated NPK Fertilizer",
+  "quantityToday": 3,
+  "description": "Updated fertilizer application"
+}
+
+### Delete Operation
+DELETE {{baseUrl}}/operations/{{AddOperation.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Download Operations Details
+GET {{baseUrl}}/operations/download-operations-details?cropId={{AddCrop.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# DOCUMENTS
+# ========================================
+
+### Get Documents by Master ID and Crop ID
+GET {{baseUrl}}/docs?masterId={{AddOperationsMaster.response.body.data._id}}&cropId={{AddCrop.response.body.data._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Add Document
+# @name AddDocument
+POST {{baseUrl}}/docs
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "cropId": "{{AddCrop.response.body.data._id}}",
+  "masterId": "{{AddOperationsMaster.response.body.data._id}}",
+  "operationId": "{{AddOperation.response.body.data._id}}",
+  "docUri": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
+  "docName": "fertilizer-invoice"
+}
+
+### Get Document by ID
+GET {{baseUrl}}/docs/{{AddDocument.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Update Document
+PUT {{baseUrl}}/docs
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+Content-Type: application/json
+
+{
+  "_id": "{{AddDocument.response.body.data._id}}",
+  "docName": "updated-fertilizer-invoice"
+}
+
+### Delete Document
+DELETE {{baseUrl}}/docs/{{AddDocument.response.body._id}}
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# DASHBOARD (Admin Only)
+# ========================================
+
+### Get Dashboard Counts
+GET {{baseUrl}}/admin/get-dashboard-counts
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Operations
+GET {{baseUrl}}/admin/get-all-operations
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Crops
+GET {{baseUrl}}/admin/get-all-crops
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get Aggregated Metrics
+GET {{baseUrl}}/admin/get-aggregated-metrics
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get Crop Wise Emissions
+GET {{baseUrl}}/admin/get-crop-wise-emission
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get Farmers Data
+GET {{baseUrl}}/admin/get-farmers-data?using=solar-pump-for-water
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get Crop Wise Water Consumption
+GET {{baseUrl}}/admin/get-crop-wise-water-consumption
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# COMMON API (Admin Only)
+# ========================================
+
+### Initialize Emission Factors
+GET {{baseUrl}}/common/init-emission-factors
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+### Get All Emissions
+GET {{baseUrl}}/common/emissions?category=fertilizer
+Authorization: Bearer {{Login.response.body.data.accessToken}}
+
+# ========================================
+# NOTES
+# ========================================
+
+# This file contains all available API endpoints for the Farm Tracker API
+# 
+# Prerequisites:
+# 1. Update @baseUrl variable to match your server URL
+# 2. Run the Register request first to create a user
+# 3. Run the Login request to get access token
+# 4. Use the access token in subsequent requests
+# 
+# Variable References:
+# - {{Login.response.body.data.accessToken}} - Access token from login
+# - {{Login.response.body.data.refreshToken}} - Refresh token from login
+# - {{Register.response.body._id}} - User ID from registration
+# - {{AddFarm.response.body._id}} - Farm ID from farm creation
+# - {{AddCrop.response.body._id}} - Crop ID from crop creation
+# - {{AddOperationsMaster.response.body._id}} - Operations Master ID
+# - {{AddOperation.response.body._id}} - Operation ID
+# - {{AddDocument.response.body._id}} - Document ID
+#
+# Admin Only Endpoints:
+# - All /admin/* endpoints require ADMIN role
+# - All /common/* endpoints require ADMIN role
+# - Some user management endpoints require ADMIN role
+#
+# File Upload:
+# - Operations Master creation supports file upload for icons
+# - Documents support base64 encoded file data
+#
+# Query Parameters:
+# - Farmers data supports: solar-pump-for-water, natural-fertilizer, opted-for-natural-produce-certification, eligible-for-green-credit
+# - User queries support: ADMIN, FARMER roles
+# - Crop types: Current, Previous
+# - User search: search parameter for name field (case-insensitive)
+# - User sorting: sort parameter accepts array of objects with id (field name) and desc (boolean)
+#   - Supported sort fields: name, phone, role, createdAt, updatedAt
+#   - Example: sort=[{"id":"phone","desc":false}]
+# - User pagination: page (default: 1) and limit (default: 10, max: 100) parameters
+#   - Example: page=1&limit=5
+#   - Response includes pagination metadata: page, limit, total, totalPages, hasNext, hasPrev
